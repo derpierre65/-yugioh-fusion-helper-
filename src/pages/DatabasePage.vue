@@ -5,7 +5,7 @@
         <form @submit.prevent="reset">
           <span class="text-h6">Filter</span>
 
-          <q-input v-model="filter.id" type="number" label="Search for ID"/>
+          <q-input v-model.number="filter.id" type="number" label="Search for ID"/>
 
           <div class="row q-gutter-x-md">
             <div class="col-grow">
@@ -28,7 +28,13 @@
               <q-select v-model="filter.sort" :options="sortValues" label="First Sort Level" map-options emit-value/>
             </div>
             <div class="col-grow">
-              <q-select v-model="filter.secondSort" :options="sortValues" label="Second Sort Level" map-options emit-value/>
+              <q-select
+                  v-model="filter.secondSort"
+                  :options="sortValues"
+                  label="Second Sort Level"
+                  map-options
+                  emit-value
+              />
             </div>
           </div>
 
@@ -40,7 +46,7 @@
     <q-infinite-scroll ref="infiniteScroll" @load="loadMore">
       <div class="flex">
         <PlayCard v-for="id in cardList" :id="id">
-          <a :href="getLink(id)">{{cardStore.cards[id].name}}</a><br>
+          <a :href="getLink(id)">{{ cardStore.cards[id].name }}</a><br>
           {{ cardStore.cards[id].password }} = {{ cardStore.cards[id].cost }}
         </PlayCard>
       </div>
@@ -73,7 +79,7 @@ const sortValues = Object.freeze([
   {label: 'Defense', value: 'def'},
   {label: 'Cost', value: 'cost'},
 ]);
-const cardList = ref([]);
+const cardList = ref<string[]>([]);
 const cardIds = Object.keys(cardStore.cards);
 const infiniteScroll = ref<QInfiniteScroll>();
 //#endregion
@@ -89,19 +95,16 @@ const filteredCardIds = computed(() => {
   const id = filter.value.id.toString();
   let cardListIds = cardIds;
 
-  if (minCosts || maxCosts || minAtk || minDef || id > 0) {
+  if (minCosts || maxCosts || minAtk || minDef || id > '0') {
     cardListIds = cardListIds.filter((cardId) => {
       const card = cardStore.cards[cardId];
       if (id && cardId !== id) {
         return false;
       }
-      if ((minCosts || maxCosts) && !card.cost) {
+      if (minCosts && (!card.cost || card.cost < minCosts)) {
         return false;
       }
-      if (maxCosts && card.cost > maxCosts) {
-        return false;
-      }
-      if (minCosts && card.cost < minCosts) {
+      if (maxCosts && (!card.cost || card.cost > maxCosts)) {
         return false;
       }
       if (minAtk && (!card.atk || card.atk < minAtk)) {
@@ -135,7 +138,7 @@ watch(filter, reset, {
 //#endregion
 
 //#region Methods
-function getLink(id) {
+function getLink(id: string) {
   const card = cardStore.cards[id];
   const urlPathName = card.name.replace(/#/g, "");
 
@@ -152,8 +155,8 @@ function reset() {
   });
 }
 
-function loadMore(index: number, done) {
-  const nextCards = filteredCardIds.value.slice((index - 1) * 50, index * 50);
+function loadMore(index: number, done: (stop: boolean) => void) {
+  const nextCards: string[] = filteredCardIds.value.slice((index - 1) * 50, index * 50);
   cardList.value.push(...nextCards);
   done(nextCards.length !== 50);
 }
