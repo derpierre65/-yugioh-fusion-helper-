@@ -10,6 +10,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'database', component: () => import('pages/DatabasePage.vue') },
       { name: 'my-deck', path: 'my-deck', component: () => import('pages/MyDeckPage.vue') },
       { name: 'opponents', path: 'opponents', component: () => import('pages/OpponentPage.vue') },
+      { name: 'wishlist', path: 'wishlist', component: () => import('pages/WishlistPage.vue') },
     ],
   },
   {

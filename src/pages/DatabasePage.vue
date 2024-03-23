@@ -66,7 +66,8 @@
           <div v-for="fusion of selectedCardFusions.to">
             <FusionRow :fusion="fusion">
               <template #card="{card}">
-                {{cardStore.cards[card].password}} = {{cardStore.cards[card].cost}}
+                <span>{{cardStore.cards[card].password}} = {{cardStore.cards[card].cost}}</span><br>
+                <a href="#" @click.prevent="deckStore.addToWishlist(card)">Add to Wishlist</a>
               </template>
             </FusionRow>
           </div>
@@ -79,7 +80,8 @@
           <div v-for="fusion of selectedCardFusions.with">
             <FusionRow :fusion="fusion">
               <template #card="{card}">
-                {{cardStore.cards[card].password}} = {{cardStore.cards[card].cost}}
+                <span>{{cardStore.cards[card].password}} = {{cardStore.cards[card].cost}}</span><br>
+                <a href="#" @click.prevent="deckStore.addToWishlist(card)">Add to Wishlist</a>
               </template>
             </FusionRow>
           </div>
@@ -96,9 +98,11 @@ import PlayCard from 'components/PlayCard.vue';
 import {QInfiniteScroll} from 'quasar';
 import {formatFusionList, fusionList} from 'src/lib/fusions';
 import FusionRow from 'components/FusionRow.vue';
+import useDeckStore from 'stores/deck';
 
 //#region Composable & Prepare
 const cardStore = useCardStore();
+const deckStore = useDeckStore();
 //#endregion
 
 //#region Data

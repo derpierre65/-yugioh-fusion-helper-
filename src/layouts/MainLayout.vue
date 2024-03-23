@@ -15,6 +15,7 @@
         <q-route-tab to="/database" label="Database" />
         <q-route-tab :to="{name: 'my-deck'}" label="My Deck" />
         <q-route-tab :to="{name: 'opponents'}" label="Opponents" />
+        <q-route-tab :to="{name: 'wishlist'}" label="Wishlist" />
       </q-tabs>
     </q-header>
 
