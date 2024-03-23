@@ -6,7 +6,7 @@
           Yu-Gi-Oh! Forbidden Memories Fusion Helper
         </q-toolbar-title>
 
-        <div>v0.1.0</div>
+        <div>v0.2.0</div>
       </q-toolbar>
 
       <q-tabs align="left">

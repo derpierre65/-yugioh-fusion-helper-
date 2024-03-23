@@ -1,8 +1,9 @@
 import fusionList from 'src/assets/fusions.json';
+import useCardStore from 'stores/card';
 
 console.log(`Loaded ${Object.values(fusionList).reduce((prev, val) => val.length + prev, 0)} possible fusions`);
 
-function findFusions(level: number, ids: string[], fusionCombination: string[], mustInclude: string): string[] {
+function findFusions(level: number, ids: string[], fusionCombination: string[], mustInclude: string | false): string[] {
     const possibleFusions: string[] = [];
     for (const material1Id of ids) {
         for (const material2Id of ids) {
@@ -34,7 +35,8 @@ function findFusions(level: number, ids: string[], fusionCombination: string[], 
                 continue;
             }
 
-            let newFusionCombination = fusionCombination.concat(fusionIds.filter((id) => id !== mustInclude).join('+'));
+            const filteredFusionIds = level > 1 ? fusionIds.filter((id) => id !== mustInclude) : fusionIds;
+            let newFusionCombination = fusionCombination.concat(filteredFusionIds.join('+'));
             availableFusions.push(
                 newFusionCombination.join('+') + ' = ' + result,
             );
@@ -51,6 +53,8 @@ function findFusions(level: number, ids: string[], fusionCombination: string[], 
 }
 
 function getIdsByString(cards: string) {
+    const cardStore = useCardStore();
+
     return cards
         .split(',')
         .map((value) => value.split(' '))
@@ -58,7 +62,8 @@ function getIdsByString(cards: string) {
             // prev.push(...value);
 
             return prev.concat(...value);
-        }, []).filter(value => value);
+        }, [])
+        .filter(value => value && cardStore.cards[value]);
 }
 
 // function askForCards(rl) {
@@ -85,7 +90,27 @@ function getIdsByString(cards: string) {
 //     });
 // }
 
+function formatFusionList(foundFusions: string[]) {
+    const cardStore = useCardStore();
+    const fusionList = [];
+
+    for (const possibleFusion of foundFusions) {
+        const cards = possibleFusion.split('=');
+        fusionList.push({
+            merge: cards[0].split('+').map(value => value.trim()),
+            final: cards[1].trim(),
+        });
+    }
+
+    return fusionList.sort((a,b) => {
+        const aCard = cardStore.cards[a.final];
+        const bCard = cardStore.cards[b.final];
+        return aCard.atk < bCard.atk ? 1 : -1;
+    });
+}
+
 export {
     findFusions,
     getIdsByString,
+    formatFusionList,
 };

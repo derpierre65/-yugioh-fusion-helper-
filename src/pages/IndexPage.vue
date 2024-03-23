@@ -17,18 +17,7 @@
 
     <template v-if="fusions.length">
       <div class="text-h6 q-py-md">{{fusions.length}} Fusions found:</div>
-      <q-card v-for="fusion in fusions">
-        <q-card-section>
-          <div class="flex items-center">
-            <template v-for="(card, index) in fusion.merge">
-              <span v-if="index !== 0" class="text-h4">+</span>
-              <PlayCard :id="card" />
-            </template>
-            <span class="text-h4">=</span>
-            <PlayCard :id="fusion.final"></PlayCard>
-          </div>
-        </q-card-section>
-      </q-card>
+      <FusionRow v-for="fusion in fusions" :fusion="fusion" />
     </template>
     <div v-else-if="fusionScanned" class="q-pt-lg">
       No Fusions available :(
@@ -38,9 +27,9 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
-import {findFusions, getIdsByString} from 'src/lib/fusions';
+import {findFusions, formatFusionList, getIdsByString} from 'src/lib/fusions';
 import useCardStore from 'stores/card';
-import PlayCard from 'components/PlayCard.vue';
+import FusionRow from 'components/FusionRow.vue';
 
 //#region Composable & Prepare
 const cardStore = useCardStore();
@@ -66,22 +55,7 @@ function submit() {
   const ids = getIdsByString((cards.value));
 
   const foundFusions = findFusions(1, ids, [], 0);
-  const fusionList = [];
-
-  for (const possibleFusion of foundFusions) {
-    const cards = possibleFusion.split('=');
-    fusionList.push({
-      merge: cards[0].split('+').map(value => value.trim()),
-      final: cards[1].trim(),
-    });
-  }
-
-  fusions.value = fusionList.sort((a,b) => {
-    const aCard = cardStore.cards[a.final];
-    const bCard = cardStore.cards[b.final];
-    return aCard.atk < bCard.atk ? 1 : -1;
-  });
-
+  fusions.value = formatFusionList(foundFusions);
   fusionScanned.value = true;
 }
 

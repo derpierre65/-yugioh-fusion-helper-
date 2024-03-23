@@ -1,7 +1,10 @@
 <template>
   <div v-if="cardDetails">
     <div :style="imageStyle" />
-    <div class="text-center">{{id}}</div>
+    <div class="text-center">
+      {{id}}<br>
+      <slot />
+    </div>
   </div>
   <div v-else>
     <span>unknown card</span>
