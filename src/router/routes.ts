@@ -8,6 +8,7 @@ const routes: RouteRecordRaw[] = [
       { path: '', component: () => import('pages/IndexPage.vue') },
       { path: 'mode/play', component: () => import('pages/ModePlayPage.vue') },
       { path: 'database', component: () => import('pages/DatabasePage.vue') },
+      { name: 'my-deck', path: 'my-deck', component: () => import('pages/MyDeckPage.vue') },
     ],
   },
   {

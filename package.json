@@ -24,6 +24,7 @@
     "cheerio": "^1.0.0-rc.12",
     "electron": "^29.1.5",
     "electron-packager": "^17.1.2",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "typescript": "^4.5.4"
   },
   "engines": {

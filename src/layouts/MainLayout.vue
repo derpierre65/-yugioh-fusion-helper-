@@ -13,6 +13,7 @@
         <q-route-tab to="/" label="Normal Mode" />
         <q-route-tab to="/mode/play" label="Play Mode" />
         <q-route-tab to="/database" label="Database" />
+        <q-route-tab :to="{name: 'my-deck'}" label="My Deck" />
       </q-tabs>
     </q-header>
 
