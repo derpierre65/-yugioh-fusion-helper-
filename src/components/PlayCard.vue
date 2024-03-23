@@ -1,7 +1,7 @@
 <template>
   <div v-if="cardDetails">
     <div :style="imageStyle" />
-    <div class="text-center">
+    <div class="text-center" style="max-width:140px;">
       {{id}}<br>
       <slot />
     </div>

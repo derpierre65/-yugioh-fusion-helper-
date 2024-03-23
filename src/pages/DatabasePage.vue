@@ -37,6 +37,7 @@
     <q-infinite-scroll ref="infiniteScroll" @load="loadMore">
       <div class="flex">
         <PlayCard v-for="id in cardList" :id="id">
+          <a :href="getLink(id)">{{cardStore.cards[id].name}}</a><br>
           {{ cardStore.cards[id].password }} = {{ cardStore.cards[id].cost }}
         </PlayCard>
       </div>
@@ -126,6 +127,13 @@ watch(filter, reset, {
 //#endregion
 
 //#region Methods
+function getLink(id) {
+  const card = cardStore.cards[id];
+  const urlPathName = card.name.replace(/#/g, "");
+
+  return `https://yugipedia.com/wiki/${urlPathName} (FMR)`;
+}
+
 function reset() {
   nextTick(() => {
     cardList.value = [];
