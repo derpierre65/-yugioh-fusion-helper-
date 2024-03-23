@@ -178,11 +178,11 @@ const allFusions = computed(() => {
 
 const selectedCardFusions = computed(() => {
   const cardId = showFusionCard.value;
-  const cardFusions = allFusions.value.filter((fusionId: string) => fusionId.startsWith(`${cardId}+`) || fusionId.endsWith(`+${cardId}`));
+  const cardFusions = allFusions.value.filter((fusionId: string) => fusionId.startsWith(`${cardId}+`) || fusionId.includes(`+${cardId}=`));
 
   return {
     to: formatFusionList((fusionList[cardId] || []).map((fusion) => `${fusion}=${cardId}`)),
-    with: formatFusionList((cardFusions || []),
+    with: formatFusionList(cardFusions || []),
   };
 });
 //#endregion
