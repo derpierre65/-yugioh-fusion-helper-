@@ -173,7 +173,7 @@ const filteredCardIds = computed(() => {
 const allFusions = computed(() => {
   const keys = Object.keys(fusionList);
 
-  return keys.reduce((prev, value) => prev.concat(...fusionList[value]), []);
+  return keys.reduce((prev, key) => prev.concat(...fusionList[key].map((fusion) => `${fusion}=${key}`)), []);
 });
 
 const selectedCardFusions = computed(() => {
@@ -182,7 +182,7 @@ const selectedCardFusions = computed(() => {
 
   return {
     to: formatFusionList((fusionList[cardId] || []).map((fusion) => `${fusion}=${cardId}`)),
-    with: formatFusionList((cardFusions || []).map((fusion) => `${fusion}=${cardId}`)),
+    with: formatFusionList((cardFusions || []),
   };
 });
 //#endregion
