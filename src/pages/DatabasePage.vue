@@ -92,13 +92,13 @@ const filteredCardIds = computed(() => {
   const minDef = filter.value.minDef;
   const firstSort = filter.value.sort;
   const secondSort = filter.value.secondSort;
-  const id = filter.value.id.toString();
+  const id = filter.value.id;
   let cardListIds = cardIds;
 
-  if (minCosts || maxCosts || minAtk || minDef || id > '0') {
+  if (minCosts || maxCosts || minAtk || minDef || id > 0) {
     cardListIds = cardListIds.filter((cardId) => {
       const card = cardStore.cards[cardId];
-      if (id && cardId !== id) {
+      if (id && cardId !== id.toString()) {
         return false;
       }
       if (minCosts && (!card.cost || card.cost < minCosts)) {
