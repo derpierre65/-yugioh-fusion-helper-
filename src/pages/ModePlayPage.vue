@@ -27,7 +27,7 @@
             <div class="text-h6">Your field cards</div>
             <div class="row">
               <PlayCard v-for="id in playStore.fieldCards" :id="id">
-                <q-btn label="Destroy" color="red"/>
+                <q-btn label="Destroy" color="red" @click="destroyFieldCard(id)"/>
               </PlayCard>
             </div>
           </template>
@@ -129,15 +129,10 @@ function addCards() {
 }
 
 function selectFusion(fusion, fieldCardId = null) {
-  if (playStore.fieldCards.length === 5) {
-    window.alert('Destroy one card on your field.');
-    return;
-  }
-
   const merge = fusion.merge.concat();
   if (fieldCardId) {
     merge.splice(merge.indexOf(fieldCardId), 1);
-    playStore.fieldCards.splice(playStore.fieldCards.indexOf(fieldCardId), 1);
+    destroyFieldCard(fieldCardId);
   }
 
   for (const id of merge) {
@@ -149,14 +144,13 @@ function selectFusion(fusion, fieldCardId = null) {
 }
 
 function playCard(id) {
-  if (playStore.fieldCards.length === 5) {
-    window.alert('Destroy one card on your field.');
-    return;
-  }
-
   const index = playStore.cards.indexOf(id);
   playStore.cards.splice(index, 1);
   playStore.fieldCards.push(id);
+}
+
+function destroyFieldCard(id) {
+  playStore.fieldCards.splice(playStore.fieldCards.indexOf(id), 1);
 }
 
 //#endregion
