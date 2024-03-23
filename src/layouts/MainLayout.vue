@@ -12,6 +12,7 @@
       <q-tabs align="left">
         <q-route-tab to="/" label="Normal Mode" />
         <q-route-tab to="/mode/play" label="Play Mode" />
+        <q-route-tab to="/database" label="Database" />
       </q-tabs>
     </q-header>
 
