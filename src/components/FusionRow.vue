@@ -5,7 +5,9 @@
         <slot />
         <template v-for="(card, index) in fusion.merge">
           <span v-if="index !== 0" class="text-h4">+</span>
-          <PlayCard :id="card" />
+          <PlayCard :id="card">
+            <slot name="card" v-bind="{card}" />
+          </PlayCard>
         </template>
         <span class="text-h4">=</span>
         <PlayCard :id="fusion.final"></PlayCard>

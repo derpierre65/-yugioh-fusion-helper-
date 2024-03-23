@@ -64,7 +64,11 @@
         <span class="text-h5 q-pl-md">To this card</span>
         <q-card-section class="row q-col-gutter-md">
           <div v-for="fusion of selectedCardFusions.to">
-            <FusionRow :fusion="fusion" />
+            <FusionRow :fusion="fusion">
+              <template #card="{card}">
+                {{cardStore.cards[card].password}} = {{cardStore.cards[card].cost}}
+              </template>
+            </FusionRow>
           </div>
         </q-card-section>
       </template>
@@ -73,7 +77,11 @@
         <span class="text-h5 q-pl-md">With this card</span>
         <q-card-section class="row q-col-gutter-md">
           <div v-for="fusion of selectedCardFusions.with">
-            <FusionRow :fusion="fusion" />
+            <FusionRow :fusion="fusion">
+              <template #card="{card}">
+                {{cardStore.cards[card].password}} = {{cardStore.cards[card].cost}}
+              </template>
+            </FusionRow>
           </div>
         </q-card-section>
       </template>
