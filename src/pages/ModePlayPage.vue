@@ -145,8 +145,8 @@ const handFusions = computed(() => {
 const stackedDeckCards = computed(() => {
   const deckCardIds = deckStore.cards;
   const stackedCards = Object.create(null);
-  for ( const id of deckCardIds ) {
-    if ( !stackedCards[id] ) {
+  for (const id of deckCardIds) {
+    if (!stackedCards[id]) {
       stackedCards[id] = 0;
     }
     stackedCards[id]++;
@@ -157,7 +157,7 @@ const stackedDeckCards = computed(() => {
 
 const availableDeckCards = computed(() => {
   const drawn = playStore.drawn.concat();
-  const stackedCards = stackedDeckCards.value;
+  const stackedCards = Object.assign({}, stackedDeckCards.value);
 
   return Object.keys(stackedCards).filter((id) => {
     const index = drawn.indexOf(id);
@@ -165,7 +165,7 @@ const availableDeckCards = computed(() => {
       return true;
     }
 
-    stackedCards[id]--;
+    stackedCards[id] -= drawn.filter((drawnId) => drawnId === id).length;
 
     return stackedCards[id] > 0;
   });
