@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHr lpR fFr">
     <q-header bordered class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-toolbar-title>
@@ -21,8 +21,21 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-drawer v-model="drawer" overlay :width="drawerWidth" side="right" content-class="bg-black">
+      soon.
+    </q-drawer>
   </q-layout>
 </template>
 
 <script setup lang="ts">
+import {provide, ref} from 'vue';
+
+const drawer = ref(false);
+const drawerWidth = ref(200);
+
+provide('showDrawer', {
+  drawer,
+  drawerWidth,
+});
 </script>

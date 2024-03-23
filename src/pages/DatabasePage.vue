@@ -46,12 +46,39 @@
     <q-infinite-scroll ref="infiniteScroll" @load="loadMore">
       <div class="flex">
         <PlayCard v-for="id in cardList" :id="id">
-          <a :href="getLink(id)">{{ cardStore.cards[id].name }}</a><br>
-          {{ cardStore.cards[id].password }} = {{ cardStore.cards[id].cost }}
+          <a href="#" @click.prevent="showFusion(id)">Show Fusions</a><br>
+          {{ cardStore.cards[id].password }} = {{ cardStore.cards[id].cost }}<br>
+          <a :href="getLink(id)" target="_blank">{{ cardStore.cards[id].name }}</a><br>
         </PlayCard>
       </div>
     </q-infinite-scroll>
   </q-page>
+
+  <q-dialog v-model="showFusionDialog" full-width>
+    <q-card class="full-width">
+      <q-toolbar>
+        <q-toolbar-title>{{cardStore.cards[showFusionCard].name}} Fusions</q-toolbar-title>
+        <q-icon name="close" size="md" class="cursor-pointer" @click="showFusionDialog = false" />
+      </q-toolbar>
+      <template v-if="selectedCardFusions.to.length">
+        <span class="text-h5 q-pl-md">To this card</span>
+        <q-card-section class="row q-col-gutter-md">
+          <div v-for="fusion of selectedCardFusions.to">
+            <FusionRow :fusion="fusion" />
+          </div>
+        </q-card-section>
+      </template>
+
+      <template v-if="selectedCardFusions.with.length">
+        <span class="text-h5 q-pl-md">With this card</span>
+        <q-card-section class="row q-col-gutter-md">
+          <div v-for="fusion of selectedCardFusions.with">
+            <FusionRow :fusion="fusion" />
+          </div>
+        </q-card-section>
+      </template>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -59,6 +86,8 @@ import useCardStore from 'stores/card';
 import {computed, nextTick, ref, watch} from 'vue';
 import PlayCard from 'components/PlayCard.vue';
 import {QInfiniteScroll} from 'quasar';
+import {formatFusionList, fusionList} from 'src/lib/fusions';
+import FusionRow from 'components/FusionRow.vue';
 
 //#region Composable & Prepare
 const cardStore = useCardStore();
@@ -79,6 +108,8 @@ const sortValues = Object.freeze([
   {label: 'Defense', value: 'def'},
   {label: 'Cost', value: 'cost'},
 ]);
+const showFusionDialog = ref(false);
+const showFusionCard = ref('');
 const cardList = ref<string[]>([]);
 const cardIds = Object.keys(cardStore.cards);
 const infiniteScroll = ref<QInfiniteScroll>();
@@ -126,6 +157,22 @@ const filteredCardIds = computed(() => {
     return aCard[firstSort] < bCard[firstSort] ? 1 : -1;
   });
 });
+
+const allFusions = computed(() => {
+  const keys = Object.keys(fusionList);
+
+  return keys.reduce((prev, value) => prev.concat(...fusionList[value]), []);
+});
+
+const selectedCardFusions = computed(() => {
+  const cardId = showFusionCard.value;
+  const cardFusions = allFusions.value.filter((fusionId: string) => fusionId.startsWith(`${cardId}+`) || fusionId.endsWith(`+${cardId}`));
+
+  return {
+    to: formatFusionList((fusionList[cardId] || []).map((fusion) => `${fusion}=${cardId}`)),
+    with: formatFusionList((cardFusions || []).map((fusion) => `${fusion}=${cardId}`)),
+  };
+});
 //#endregion
 
 //#region Watch
@@ -159,6 +206,11 @@ function loadMore(index: number, done: (stop: boolean) => void) {
   const nextCards: string[] = filteredCardIds.value.slice((index - 1) * 50, index * 50);
   cardList.value.push(...nextCards);
   done(nextCards.length !== 50);
+}
+
+function showFusion(id: string) {
+  showFusionDialog.value = true;
+  showFusionCard.value = id;
 }
 
 //#endregion
