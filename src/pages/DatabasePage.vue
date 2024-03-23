@@ -4,20 +4,23 @@
       <q-card-section>
         <form @submit.prevent="reset">
           <span class="text-h6">Filter</span>
+
+          <q-input v-model="filter.id" type="number" label="Search for ID"/>
+
           <div class="row q-gutter-x-md">
             <div class="col-grow">
-              <q-input v-model="filter.minCosts" type="number" label="Min Cost"/>
+              <q-input v-model.number="filter.minCosts" type="number" label="Min Cost"/>
             </div>
             <div class="col-grow">
-              <q-input v-model="filter.maxCosts" type="number" label="Max Cost"/>
+              <q-input v-model.number="filter.maxCosts" type="number" label="Max Cost"/>
             </div>
           </div>
           <div class="row q-gutter-x-md">
             <div class="col-grow">
-              <q-input v-model="filter.minAtk" type="number" label="Min Atk"/>
+              <q-input v-model.number="filter.minAtk" type="number" label="Min Atk"/>
             </div>
             <div class="col-grow">
-              <q-input v-model="filter.minDef" type="number" label="Min Def"/>
+              <q-input v-model.number="filter.minDef" type="number" label="Min Def"/>
             </div>
           </div>
           <div class="row q-gutter-x-md">
@@ -57,6 +60,7 @@ const cardStore = useCardStore();
 
 //#region Data
 const filter = ref({
+  id: 0,
   minCosts: 0,
   maxCosts: 0,
   minAtk: 0,
@@ -82,11 +86,15 @@ const filteredCardIds = computed(() => {
   const minDef = filter.value.minDef;
   const firstSort = filter.value.sort;
   const secondSort = filter.value.secondSort;
+  const id = filter.value.id.toString();
   let cardListIds = cardIds;
 
-  if (minCosts || maxCosts || minAtk || minDef) {
+  if (minCosts || maxCosts || minAtk || minDef || id > 0) {
     cardListIds = cardListIds.filter((cardId) => {
       const card = cardStore.cards[cardId];
+      if (id && cardId !== id) {
+        return false;
+      }
       if ((minCosts || maxCosts) && !card.cost) {
         return false;
       }

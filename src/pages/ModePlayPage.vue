@@ -71,7 +71,6 @@
               </div>
             </div>
             <div v-if="playStore.cards.length" class="col-grow">
-              {{ fieldFusions }}
               <template v-if="fieldFusions">
                 <div class="text-h6 q-py-sm">Possible fusions with your field and hand cards</div>
                 <div>
