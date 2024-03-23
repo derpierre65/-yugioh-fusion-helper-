@@ -16,10 +16,13 @@
     </div>
     <!--endregion-->
 
-    <span class="text-h6">Your deck {{ deckStore.cards.length }}/40:</span>
+    <q-banner class="bg-yellow-2 q-my-md">Fusions are overall fusions not only available fusions within your deck.</q-banner>
+
+    <div class="text-h6">Your deck {{ deckStore.cards.length }}/40:</div>
     <div class="flex">
-      <PlayCard v-for="id in deckStore.cards" :id="id">
-        <q-btn label="Remove" color="red" @click="removeCard(id)"/>
+      <PlayCard v-for="card in cardList" :id="card.id">
+        <span>Fusions: {{card.possibleFusions}}</span><br>
+        <q-btn label="Remove" color="red" @click="removeCard(card.id)"/>
       </PlayCard>
     </div>
   </q-page>
@@ -27,8 +30,8 @@
 
 <script setup lang="ts">
 import useDeckStore from 'stores/deck';
-import {ref} from 'vue';
-import {getIdsByString} from 'src/lib/fusions';
+import {computed, ref} from 'vue';
+import {findFusions, fusionList, getIdsByString} from 'src/lib/fusions';
 import PlayCard from 'components/PlayCard.vue';
 
 //#region Composable & Prepare
@@ -40,6 +43,25 @@ const newCards = ref('');
 //#endregion
 
 //#region Computed
+const allFusions = computed(() => {
+  const keys = Object.keys(fusionList);
+
+  return keys.reduce((prev, value) => prev.concat(...fusionList[value]), []);
+});
+
+const cardList = computed(() => {
+  const cardFusions = Object.create(null);
+  for ( const id of deckStore.cards ) {
+    if (!cardFusions[id] ) {
+      cardFusions[id] = allFusions.value.filter((fusionId: string) => fusionId.startsWith(`${id}+`) || fusionId.endsWith(`+${id}`)).length;
+    }
+  }
+
+  return deckStore.cards.map((id) => ({
+    id,
+    possibleFusions: cardFusions[id] || 0,
+  }));
+})
 //#endregion
 
 //#region Watch

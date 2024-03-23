@@ -4,71 +4,103 @@
       <q-btn label="Start new game" color="primary" @click="startNewGame"/>
     </div>
 
-    <!--region add card container-->
-    <div class="row q-col-gutter-md">
-      <div class="col-grow">
-        <q-input
-            v-model="newCards"
-            label="New Cards"
-            hint="Add your new cards here. Split multiple Card ids with , or space. example: 604,102,123,101,586"
-            @keyup.enter="addCards"
-        />
-      </div>
-      <div class="flex items-center">
-        <q-btn label="Add Cards" color="primary" @click="addCards"/>
-      </div>
-    </div>
-    <!--endregion-->
-
-    <div class="flex q-col-gutter-sm">
-      <div style="min-width:700px;">
-        <div style="position: sticky; top: 100px;">
-          <template v-if="playStore.fieldCards.length">
-            <div class="text-h6">Your field cards</div>
-            <div class="row">
-              <PlayCard v-for="id in playStore.fieldCards" :id="id">
-                <q-btn label="Destroy" color="red" @click="destroyFieldCard(id)"/>
-              </PlayCard>
-            </div>
-          </template>
-          <template v-if="playStore.cards.length">
-            <div class="text-h6 q-py-sm">Your hand cards</div>
-            <div class="row">
-              <PlayCard v-for="id in playStore.cards" :id="id">
-                <q-btn label="Play" color="primary" @click="playCard(id)"/>
-              </PlayCard>
-            </div>
-          </template>
+    <q-layout view="hHr lpR fFr">
+      <q-drawer
+          v-if="availableDeckCards.length"
+          v-model="deckDrawer"
+          side="right"
+          show-if-above
+          overlay
+          elevated
+          :width="1450"
+      >
+        <div class="flex justify-end">
+          <q-icon name="close" size="md" class="cursor-pointer" @click="deckDrawer = false">
+            <q-tooltip>Close</q-tooltip>
+          </q-icon>
         </div>
-      </div>
-      <div v-if="playStore.cards.length" class="col-grow">
-        {{fieldFusions}}
-        <template v-if="fieldFusions">
-          <div class="text-h6 q-py-sm">Possible fusions with your field and hand cards</div>
-          <div>
-            <template v-for="(fieldCardFusions, fieldCardId) in fieldFusions">
-              <FusionRow v-for="fusion in fieldCardFusions" :fusion="fusion">
-                <div>
-                  <q-btn label="Select" @click="selectFusion(fusion, fieldCardId)"/>
-                </div>
-              </FusionRow>
-            </template>
+        <div class="row">
+          <PlayCard v-for="id in availableDeckCards" :id="id">
+            <q-btn label="Add to hand" color="red" @click="addToHand(id)"/>
+          </PlayCard>
+        </div>
+      </q-drawer>
+
+      <q-page-container @click="deckDrawer = false">
+        <q-page>
+          <!--region add card container-->
+          <div class="row q-col-gutter-md">
+            <div class="col-grow">
+              <q-input
+                  v-model="newCards"
+                  label="New Cards"
+                  hint="Add your new cards here. Split multiple Card ids with , or space. example: 604,102,123,101,586"
+                  @keyup.enter="addCards"
+              />
+            </div>
+            <div class="flex items-center q-col-gutter-xs">
+              <div>
+                <q-btn label="Add Cards" color="primary" @click="addCards"/>
+              </div>
+              <div>
+                <q-btn label="Add Card from deck" color="primary" @click.stop="deckDrawer = true"/>
+              </div>
+            </div>
           </div>
-        </template>
+          <!--endregion-->
 
-        <div class="text-h6 q-py-sm">Possible fusions with your hand cards</div>
-        <div v-if="handFusions.length">
-          <FusionRow v-for="fusion in handFusions" :fusion="fusion">
-            <div>
-              <q-btn label="Select" @click="selectFusion(fusion)"/>
+          <div class="flex q-col-gutter-sm">
+            <div style="min-width:700px;">
+              <div style="position: sticky; top: 100px;">
+                <template v-if="playStore.fieldCards.length">
+                  <div class="text-h6">Your field cards</div>
+                  <div class="row">
+                    <PlayCard v-for="id in playStore.fieldCards" :id="id">
+                      <q-btn label="Destroy" color="red" @click="destroyFieldCard(id)"/>
+                    </PlayCard>
+                  </div>
+                </template>
+                <template v-if="playStore.cards.length">
+                  <div class="text-h6 q-py-sm">Your hand cards</div>
+                  <div class="row">
+                    <PlayCard v-for="id in playStore.cards" :id="id">
+                      <q-btn label="Play" color="primary" @click="playCard(id)"/>
+                    </PlayCard>
+                  </div>
+                </template>
+              </div>
             </div>
-          </FusionRow>
-        </div>
-        <div v-else>
-          No fusions possible :(
-        </div>
-      </div>
-    </div>
+            <div v-if="playStore.cards.length" class="col-grow">
+              {{ fieldFusions }}
+              <template v-if="fieldFusions">
+                <div class="text-h6 q-py-sm">Possible fusions with your field and hand cards</div>
+                <div>
+                  <template v-for="(fieldCardFusions, fieldCardId) in fieldFusions">
+                    <FusionRow v-for="fusion in fieldCardFusions" :fusion="fusion">
+                      <div>
+                        <q-btn label="Select" @click="selectFusion(fusion, fieldCardId)"/>
+                      </div>
+                    </FusionRow>
+                  </template>
+                </div>
+              </template>
+
+              <div class="text-h6 q-py-sm">Possible fusions with your hand cards</div>
+              <div v-if="handFusions.length">
+                <FusionRow v-for="fusion in handFusions" :fusion="fusion">
+                  <div>
+                    <q-btn label="Select" @click="selectFusion(fusion)"/>
+                  </div>
+                </FusionRow>
+              </div>
+              <div v-else>
+                No fusions possible :(
+              </div>
+            </div>
+          </div>
+        </q-page>
+      </q-page-container>
+    </q-layout>
   </q-page>
 </template>
 
@@ -78,25 +110,28 @@ import {computed, ref} from 'vue';
 import {findFusions, formatFusionList, getIdsByString} from 'src/lib/fusions';
 import PlayCard from 'components/PlayCard.vue';
 import FusionRow from 'components/FusionRow.vue';
+import useDeckStore from 'stores/deck';
 
 //#region Composable & Prepare
 const playStore = usePlayModeStore();
+const deckStore = useDeckStore();
 //#endregion
 
 //region Data
 const newCards = ref('');
+const deckDrawer = ref(false);
 //endregion
 
 //#region Computed
 const fieldFusions = computed(() => {
   const possibleFusions = {};
   let fusionCount = 0;
-  for ( const id of playStore.fieldCards ) {
+  for (const id of playStore.fieldCards) {
     possibleFusions[id] = formatFusionList(findFusions(1, playStore.cards.concat(id), [], id));
     fusionCount += possibleFusions[id].length;
   }
 
-  if ( fusionCount === 0 ) {
+  if (fusionCount === 0) {
     return null;
   }
 
@@ -105,6 +140,35 @@ const fieldFusions = computed(() => {
 
 const handFusions = computed(() => {
   return formatFusionList(findFusions(1, playStore.cards, [], false));
+});
+
+const stackedDeckCards = computed(() => {
+  const deckCardIds = deckStore.cards;
+  const stackedCards = Object.create(null);
+  for ( const id of deckCardIds ) {
+    if ( !stackedCards[id] ) {
+      stackedCards[id] = 0;
+    }
+    stackedCards[id]++;
+  }
+
+  return stackedCards;
+});
+
+const availableDeckCards = computed(() => {
+  const drawn = playStore.drawn.concat();
+  const stackedCards = stackedDeckCards.value;
+
+  return Object.keys(stackedCards).filter((id) => {
+    const index = drawn.indexOf(id);
+    if (index === -1) {
+      return true;
+    }
+
+    stackedCards[id]--;
+
+    return stackedCards[id] > 0;
+  });
 });
 //#endregion
 
@@ -117,15 +181,27 @@ const handFusions = computed(() => {
 //#region Methods
 function startNewGame() {
   playStore.started = true;
+  playStore.drawn = [];
   playStore.cards = [];
   playStore.fieldCards = [];
 }
 
 function addCards() {
+  if (playStore.cards.length === 5) {
+    return false;
+  }
+
   const ids = getIdsByString(newCards.value);
+  if ((playStore.cards.length + ids.length) > 5) {
+    return false;
+  }
+
   playStore.cards.push(...ids);
+  playStore.drawn.push(...ids);
 
   newCards.value = '';
+
+  return true;
 }
 
 function selectFusion(fusion, fieldCardId = null) {
@@ -151,6 +227,13 @@ function playCard(id) {
 
 function destroyFieldCard(id) {
   playStore.fieldCards.splice(playStore.fieldCards.indexOf(id), 1);
+}
+
+function addToHand(id: string) {
+  const beforeValue = newCards.value;
+  newCards.value = id;
+  addCards();
+  newCards.value = beforeValue;
 }
 
 //#endregion

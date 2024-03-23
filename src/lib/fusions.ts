@@ -110,6 +110,7 @@ function formatFusionList(foundFusions: string[]) {
 }
 
 export {
+    fusionList,
     findFusions,
     getIdsByString,
     formatFusionList,
