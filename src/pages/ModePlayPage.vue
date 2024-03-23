@@ -234,6 +234,9 @@ function addToHand(id: string) {
   newCards.value = id;
   addCards();
   newCards.value = beforeValue;
+  if (playStore.cards.length >= 5) {
+    deckDrawer.value = false;
+  }
 }
 
 //#endregion
