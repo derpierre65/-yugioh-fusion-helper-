@@ -6,7 +6,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: 'mode/play', component: () => import('pages/ModePlayPage.vue') },
+      { name: 'play', path: 'mode/play', component: () => import('pages/ModePlayPage.vue') },
       { path: 'database', component: () => import('pages/DatabasePage.vue') },
       { name: 'my-deck', path: 'my-deck', component: () => import('pages/MyDeckPage.vue') },
       { name: 'opponents', path: 'opponents', component: () => import('pages/OpponentPage.vue') },

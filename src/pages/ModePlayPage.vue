@@ -9,7 +9,6 @@
           v-if="availableDeckCards.length"
           v-model="deckDrawer"
           side="right"
-          show-if-above
           overlay
           elevated
           :width="1450"
@@ -21,7 +20,7 @@
         </div>
         <div class="row">
           <PlayCard v-for="id in availableDeckCards" :id="id">
-            <q-btn label="Add to hand" color="red" @click="addToHand(id)"/>
+            <q-btn label="Add to hand" color="green" @click="addToHand(id)"/>
           </PlayCard>
         </div>
       </q-drawer>
@@ -65,6 +64,7 @@
                   <div class="row">
                     <PlayCard v-for="id in playStore.cards" :id="id">
                       <q-btn label="Play" color="primary" @click="playCard(id)"/>
+                      <q-btn label="To deck" color="primary" @click="cardBackToDeck(id)"/>
                     </PlayCard>
                   </div>
                 </template>
@@ -218,13 +218,22 @@ function selectFusion(fusion, fieldCardId = null) {
   playStore.fieldCards.push(fusion.final);
 }
 
-function playCard(id) {
+function playCard(id: string) {
   const index = playStore.cards.indexOf(id);
   playStore.cards.splice(index, 1);
   playStore.fieldCards.push(id);
 }
 
-function destroyFieldCard(id) {
+function cardBackToDeck(id: string) {
+  const index = playStore.cards.indexOf(id);
+  playStore.cards.splice(index, 1);
+  const drawnIndex = playStore.drawn.indexOf(id);
+  if ( drawnIndex >= 0 ) {
+    playStore.drawn.splice(drawnIndex, 1);
+  }
+}
+
+function destroyFieldCard(id: string) {
   playStore.fieldCards.splice(playStore.fieldCards.indexOf(id), 1);
 }
 

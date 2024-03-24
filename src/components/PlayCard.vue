@@ -3,6 +3,13 @@
     <div :style="imageStyle" />
     <div class="text-center" style="max-width:140px;">
       {{id}}<br>
+      <template v-if="$route.name !== 'play'">
+        <a href="#" @click.prevent="deckStore.addToWishlist(id)">Add to Wishlist</a><br>
+        <a href="#" @click.prevent="cardStore.showFusion(id)">Show Fusions</a><br>
+        {{ cardStore.cards[id].password }} = {{ cardStore.cards[id].cost }}<br>
+        <slot name="before-name" />
+        <a :href="getLink(id)" target="_blank">{{ cardStore.cards[id].name }}</a><br>
+      </template>
       <slot />
     </div>
   </div>
@@ -14,10 +21,12 @@
 
 <script setup lang="ts">
 import useCardStore from 'stores/card';
-import {computed, onMounted} from 'vue';
+import {computed} from 'vue';
+import useDeckStore from 'stores/deck';
 
 //#region Composable & Prepare
 const props = defineProps({
+  isPlay: Boolean,
   id: {
     type: [String, Number],
     required: true,
@@ -26,6 +35,7 @@ const props = defineProps({
 });
 
 const cardStore = useCardStore();
+const deckStore = useDeckStore();
 //#endregion
 
 //#region Data
@@ -53,6 +63,12 @@ const imageStyle = computed(() => {
 //#endregion
 
 //#region Methods
+function getLink(id: string) {
+  const card = cardStore.cards[id];
+  const urlPathName = card.name.replace(/#/g, "");
+
+  return `https://yugipedia.com/wiki/${urlPathName} (FMR)`;
+}
 //#endregion
 
 //#region Created

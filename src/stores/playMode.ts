@@ -5,9 +5,9 @@ const usePlayModeStore = defineStore('playMode', {
     state() {
         return {
             started: false,
-            fieldCards: [],
-            cards: [],
-            drawn: [],
+            fieldCards: [] as string[],
+            cards: [] as string[],
+            drawn: [] as string[],
         };
     },
 });

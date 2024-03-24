@@ -21,7 +21,9 @@
     <div class="text-h6">Your deck {{ deckStore.cards.length }}/40:</div>
     <div class="flex">
       <PlayCard v-for="card in cardList" :id="card.id">
-        <span>Fusions: {{card.possibleFusions}}</span><br>
+        <template #before-name>
+          <span>Fusions: {{card.possibleFusions}}</span><br>
+        </template>
         <q-btn label="Remove" color="red" @click="removeCard(card.id)"/>
       </PlayCard>
     </div>

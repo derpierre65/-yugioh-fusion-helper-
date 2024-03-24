@@ -10,7 +10,11 @@
           </PlayCard>
         </template>
         <span class="text-h4">=</span>
-        <PlayCard :id="fusion.final"></PlayCard>
+        <PlayCard :id="fusion.final">
+          <slot name="final-card" v-bind="{card: fusion.final}">
+            <slot v-if="useCardAsFinal" name="card" v-bind="{card: fusion.final}" />
+          </slot>
+        </PlayCard>
       </div>
 
     </q-card-section>
@@ -22,6 +26,7 @@ import PlayCard from 'components/PlayCard.vue';
 
 //#region Composable & Prepare
 defineProps({
+  useCardAsFinal: Boolean,
   fusion: {
     type: Object,
     required: true,

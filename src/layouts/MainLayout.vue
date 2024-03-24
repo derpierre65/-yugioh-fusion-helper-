@@ -11,7 +11,7 @@
 
       <q-tabs align="left">
         <q-route-tab to="/" label="Normal Mode" />
-        <q-route-tab to="/mode/play" label="Play Mode" />
+        <q-route-tab :to="{name: 'play'}" label="Play Mode" />
         <q-route-tab to="/database" label="Database" />
         <q-route-tab :to="{name: 'my-deck'}" label="My Deck" />
         <q-route-tab :to="{name: 'opponents'}" label="Opponents" />
@@ -27,15 +27,64 @@
       soon.
     </q-drawer>
   </q-layout>
+
+  <q-dialog v-model="cardStore.showFusionDialog" full-width>
+    <q-card class="full-width">
+      <q-toolbar>
+        <q-toolbar-title>{{cardStore.cards[cardStore.showFusionCard].name}} Fusions</q-toolbar-title>
+        <q-icon name="close" size="md" class="cursor-pointer" @click="cardStore.showFusionDialog = false" />
+      </q-toolbar>
+      <template v-if="cardStore.selectedCardFusions.to.length">
+        <span class="text-h5 q-pl-md">To this card</span>
+        <q-card-section class="row q-col-gutter-md">
+          <div v-for="fusion of cardStore.selectedCardFusions.to">
+            <FusionRow :fusion="fusion" />
+          </div>
+        </q-card-section>
+      </template>
+
+      <template v-if="cardStore.selectedCardFusions.with.length">
+        <span class="text-h5 q-pl-md">With this card</span>
+        <q-card-section class="row q-col-gutter-md">
+          <div v-for="fusion of cardStore.selectedCardFusions.with">
+            <FusionRow :fusion="fusion" />
+          </div>
+        </q-card-section>
+      </template>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
 import {provide, ref} from 'vue';
+import FusionRow from 'components/FusionRow.vue';
+import useCardStore from 'stores/card';
 
+//#region Composable & Prepare
+const cardStore = useCardStore();
+//#endregion
+
+//#region Data
 const drawer = ref(false);
 const drawerWidth = ref(200);
+//#endregion
 
-provide('showDrawer', {
+//#region Computed
+//#endregion
+
+//#region Watch
+//#endregion
+
+//#region Lifecycle Events
+//#endregion
+
+//#region Methods
+//#endregion
+
+//#region Created
+//#endregion
+
+provide('drawer', {
   drawer,
   drawerWidth,
 });
