@@ -7,6 +7,7 @@ const useDeckStore = defineStore('deck', {
     state() {
         return {
             wishlist: {} as Record<string, number>,
+            fusions: {} as Record<string, number>,
             cards: [],
         };
     },
@@ -25,6 +26,13 @@ const useDeckStore = defineStore('deck', {
                 message: `Added ${name} to wishlist`,
                 position: 'top-right',
             });
+        },
+        addFusion(id: string) {
+            if (!this.fusions[id]) {
+                this.fusions[id] = 0;
+            }
+
+            this.fusions[id] ++;
         },
         removeFromWishlisth(id: string) {
             if (!this.wishlist[id]) {

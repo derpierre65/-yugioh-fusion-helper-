@@ -23,6 +23,7 @@
       <PlayCard v-for="card in cardList" :id="card.id">
         <template #before-name>
           <span>Fusions: {{card.possibleFusions}}</span><br>
+          <span>Fusions done: {{deckStore.fusions[card.id] || 0}}</span><br>
         </template>
         <q-btn label="Remove" color="red" @click="removeCard(card.id)"/>
       </PlayCard>

@@ -213,6 +213,7 @@ function selectFusion(fusion, fieldCardId = null) {
   for (const id of merge) {
     const index = playStore.cards.indexOf(id);
     playStore.cards.splice(index, 1);
+    deckStore.addFusion(id);
   }
 
   playStore.fieldCards.push(fusion.final);
