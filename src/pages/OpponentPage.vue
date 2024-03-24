@@ -8,32 +8,36 @@
           </q-item>
         </q-list>
       </div>
-      <div class="col-grow col-shrink">
-        <div class="text-h4 q-mb-md">Deck</div>
-        <div class="flex">
-          <PlayCard v-for="id in persons[selectedPerson].deck" :id="id"/>
-        </div>
+      <div class="col-grow col-shrink full-width q-gutter-y-md">
+        <AppCard title="Deck" expandable>
+          <div class="flex">
+            <PlayCard v-for="id in persons[selectedPerson].deck" :id="id"/>
+          </div>
+        </AppCard>
 
-        <div class="text-h4 q-my-md">TEC S/A Drops</div>
-        <div class="flex">
-          <PlayCard v-for="drop in tecSADrops" :id="drop.id">
-            {{ drop.percent }}% ({{ drop[2048] }}/2048)
-          </PlayCard>
-        </div>
+        <AppCard title="TEC S/A Drops" show expandable>
+          <div class="flex">
+            <PlayCard v-for="drop in tecSADrops" :id="drop.id">
+              {{ drop.percent }}% ({{ drop[2048] }}/2048)
+            </PlayCard>
+          </div>
+        </AppCard>
 
-        <div class="text-h4 q-my-md">POW S/A Drops</div>
-        <div class="flex">
-          <PlayCard v-for="drop in powSADrops" :id="drop.id">
-            {{ drop.percent }}% ({{ drop[2048] }}/2048)
-          </PlayCard>
-        </div>
+        <AppCard title="POW S/A Drops" show expandable>
+          <div class="flex">
+            <PlayCard v-for="drop in powSADrops" :id="drop.id">
+              {{ drop.percent }}% ({{ drop[2048] }}/2048)
+            </PlayCard>
+          </div>
+        </AppCard>
 
-        <div class="text-h4 q-my-md">POW/TEC: B/C/D Drops</div>
-        <div class="flex">
-          <PlayCard v-for="drop in bcdDrops" :id="drop.id">
-            {{ drop.percent }}% ({{ drop[2048] }}/2048)
-          </PlayCard>
-        </div>
+        <AppCard title="POW/TEC: B/C/D Drops" show expandable>
+          <div class="flex">
+            <PlayCard v-for="drop in bcdDrops" :id="drop.id">
+              {{ drop.percent }}% ({{ drop[2048] }}/2048)
+            </PlayCard>
+          </div>
+        </AppCard>
       </div>
     </div>
   </q-page>
@@ -43,12 +47,14 @@
 import persons from 'src/assets/persons.json';
 import {computed, ref} from 'vue';
 import PlayCard from 'components/PlayCard.vue';
+import AppCard from 'components/AppCard.vue';
 
 //#region Composable & Prepare
 //#endregion
 
 //#region Data
 const selectedPerson = ref(0);
+const showDeck = ref(false);
 //#endregion
 
 //#region Computed
