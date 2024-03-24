@@ -4,114 +4,104 @@
       <q-btn label="Start new game" color="primary" @click="startNewGame"/>
     </div>
 
-    <q-layout view="hHr lpR fFr">
-      <q-drawer
-          v-if="availableDeckCards.length"
-          v-model="deckDrawer"
-          side="right"
-          overlay
-          elevated
-          :width="1450"
-      >
-        <div class="flex justify-end">
-          <q-icon name="close" size="md" class="cursor-pointer" @click="deckDrawer = false">
-            <q-tooltip>Close</q-tooltip>
-          </q-icon>
-        </div>
-        <div class="row">
-          <PlayCard v-for="id in availableDeckCards" :id="id">
-            <q-btn label="Add to hand" color="green" @click="addToHand(id)"/>
-          </PlayCard>
-        </div>
-      </q-drawer>
+    <portal to="drawer">
+      <div class="flex justify-end">
+        <q-icon name="close" size="md" class="cursor-pointer" @click="drawer = false">
+          <q-tooltip>Close</q-tooltip>
+        </q-icon>
+      </div>
+      <div class="row">
+        <PlayCard v-for="id in availableDeckCards" :id="id">
+          <q-btn label="Add to hand" color="green" @click="addToHand(id)"/>
+        </PlayCard>
+      </div>
+    </portal>
 
-      <q-page-container @click="deckDrawer = false">
-        <q-page>
-          <!--region add card container-->
-          <div class="row q-col-gutter-md">
-            <div class="col-grow">
-              <q-input
-                  v-model="newCards"
-                  label="New Cards"
-                  hint="Add your new cards here. Split multiple Card ids with , or space. example: 604,102,123,101,586"
-                  @keyup.enter="addCards"
-              />
-            </div>
-            <div class="flex items-center q-col-gutter-xs">
-              <div>
-                <q-btn label="Add Cards" color="primary" @click="addCards"/>
-              </div>
-              <div>
-                <q-btn label="Add Card from deck" color="primary" @click.stop="deckDrawer = true"/>
-              </div>
-            </div>
-          </div>
-          <!--endregion-->
+    <!--region add card container-->
+    <div class="row q-col-gutter-md">
+      <div class="col-grow">
+        <q-input
+            v-model="newCards"
+            label="New Cards"
+            hint="Add your new cards here. Split multiple Card ids with , or space. example: 604,102,123,101,586"
+            @keyup.enter="addCards"
+        />
+      </div>
+      <div class="flex items-center q-col-gutter-xs">
+        <div>
+          <q-btn label="Add Cards" color="primary" @click="addCards"/>
+        </div>
+        <div>
+          <q-btn label="Add Card from deck" color="primary" @click.stop="drawer = true"/>
+        </div>
+      </div>
+    </div>
+    <!--endregion-->
 
-          <div class="flex q-col-gutter-sm">
-            <div style="min-width:700px;">
-              <div style="position: sticky; top: 100px;">
-                <template v-if="playStore.cards.length">
-                  <div class="text-h6 q-py-sm">Your hand cards</div>
-                  <div class="row">
-                    <PlayCard v-for="id in playStore.cards" :id="id">
-                      <q-btn label="Play" color="primary" @click="playCard(id)"/>
-                      <q-btn label="To deck" color="primary" @click="cardBackToDeck(id)"/>
-                    </PlayCard>
-                  </div>
-                </template>
-                <template v-if="playStore.fieldCards.length">
-                  <div class="text-h6">Your field cards</div>
-                  <div class="row">
-                    <PlayCard v-for="id in playStore.fieldCards" :id="id">
-                      <q-btn label="Destroy" color="red" @click="destroyFieldCard(id)"/>
-                    </PlayCard>
-                  </div>
-                </template>
-              </div>
+    <div class="flex q-col-gutter-sm">
+      <div style="min-width:700px;">
+        <div style="position: sticky; top: 100px;">
+          <template v-if="playStore.cards.length">
+            <div class="text-h6 q-py-sm">Your hand cards</div>
+            <div class="row">
+              <PlayCard v-for="id in playStore.cards" :id="id">
+                <q-btn label="Play" color="primary" @click="playCard(id)"/>
+                <q-btn label="To deck" color="primary" @click="cardBackToDeck(id)"/>
+              </PlayCard>
             </div>
-            <div v-if="playStore.cards.length" class="col-grow">
-              <template v-if="fieldFusions">
-                <div class="text-h6 q-py-sm">Possible fusions with your field and hand cards</div>
+          </template>
+          <template v-if="playStore.fieldCards.length">
+            <div class="text-h6">Your field cards</div>
+            <div class="row">
+              <PlayCard v-for="id in playStore.fieldCards" :id="id">
+                <q-btn label="Destroy" color="red" @click="destroyFieldCard(id)"/>
+              </PlayCard>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div v-if="playStore.cards.length" class="col-grow">
+        <template v-if="fieldFusions">
+          <div class="text-h6 q-py-sm">Possible fusions with your field and hand cards</div>
+          <div>
+            <template v-for="(fieldCardFusions, fieldCardId) in fieldFusions">
+              <FusionRow v-for="fusion in fieldCardFusions" :fusion="fusion">
                 <div>
-                  <template v-for="(fieldCardFusions, fieldCardId) in fieldFusions">
-                    <FusionRow v-for="fusion in fieldCardFusions" :fusion="fusion">
-                      <div>
-                        <q-btn label="Select" @click="selectFusion(fusion, fieldCardId)"/>
-                      </div>
-                    </FusionRow>
-                  </template>
+                  <q-btn label="Select" @click="selectFusion(fusion, fieldCardId)"/>
                 </div>
-              </template>
-
-              <div class="text-h6 q-py-sm">Possible fusions with your hand cards</div>
-              <div v-if="handFusions.length">
-                <FusionRow v-for="fusion in handFusions" :fusion="fusion">
-                  <div>
-                    <q-btn label="Select" @click="selectFusion(fusion)"/>
-                  </div>
-                </FusionRow>
-              </div>
-              <div v-else>
-                No fusions possible :(
-              </div>
-            </div>
+              </FusionRow>
+            </template>
           </div>
-        </q-page>
-      </q-page-container>
-    </q-layout>
+        </template>
+
+        <div class="text-h6 q-py-sm">Possible fusions with your hand cards</div>
+        <div v-if="handFusions.length">
+          <FusionRow v-for="fusion in handFusions" :fusion="fusion">
+            <div>
+              <q-btn label="Select" @click="selectFusion(fusion)"/>
+            </div>
+          </FusionRow>
+        </div>
+        <div v-else>
+          No fusions possible :(
+        </div>
+      </div>
+    </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import usePlayModeStore from 'stores/playMode';
-import {computed, ref} from 'vue';
+import {computed, inject, provide, ref} from 'vue';
 import {findFusions, formatFusionList, getIdsByString} from 'src/lib/fusions';
 import PlayCard from 'components/PlayCard.vue';
 import FusionRow from 'components/FusionRow.vue';
 import useDeckStore from 'stores/deck';
+import {Portal} from 'portal-vue';
 
 //#region Composable & Prepare
+const {drawer, drawerWidth} = inject('drawer')!;
+
 const playStore = usePlayModeStore();
 const deckStore = useDeckStore();
 //#endregion
@@ -251,5 +241,6 @@ function addToHand(id: string) {
 //#endregion
 
 //#region Created
+drawerWidth.value = 1450;
 //#endregion
 </script>

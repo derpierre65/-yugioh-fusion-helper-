@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHr lpR fFr">
+  <q-layout view="hHr lpR fFr" @click="close">
     <q-header bordered class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-toolbar-title>
@@ -10,35 +10,42 @@
       </q-toolbar>
 
       <q-tabs align="left">
-        <q-route-tab to="/" label="Normal Mode" />
-        <q-route-tab :to="{name: 'play'}" label="Play Mode" />
-        <q-route-tab to="/database" label="Database" />
-        <q-route-tab :to="{name: 'my-deck'}" label="My Deck" />
-        <q-route-tab :to="{name: 'opponents'}" label="Opponents" />
-        <q-route-tab :to="{name: 'wishlist'}" label="Wishlist" />
+        <q-route-tab to="/" label="Normal Mode"/>
+        <q-route-tab :to="{name: 'play'}" label="Play Mode"/>
+        <q-route-tab to="/database" label="Database"/>
+        <q-route-tab :to="{name: 'my-deck'}" label="My Deck"/>
+        <q-route-tab :to="{name: 'opponents'}" label="Opponents"/>
+        <q-route-tab :to="{name: 'wishlist'}" label="Wishlist"/>
       </q-tabs>
     </q-header>
 
     <q-page-container>
-      <router-view />
+      <router-view/>
     </q-page-container>
 
-    <q-drawer v-model="drawer" overlay :width="drawerWidth" side="right" content-class="bg-black">
-      soon.
+    <q-drawer
+        v-model="drawer"
+        :width="drawerWidth"
+        side="right"
+        content-class="bg-black"
+        elevated
+        overlay
+    >
+      <portal-target name="drawer"/>
     </q-drawer>
   </q-layout>
 
   <q-dialog v-model="cardStore.showFusionDialog" full-width>
     <q-card class="full-width">
       <q-toolbar>
-        <q-toolbar-title>{{cardStore.cards[cardStore.showFusionCard].name}} Fusions</q-toolbar-title>
-        <q-icon name="close" size="md" class="cursor-pointer" @click="cardStore.showFusionDialog = false" />
+        <q-toolbar-title>{{ cardStore.cards[cardStore.showFusionCard].name }} Fusions</q-toolbar-title>
+        <q-icon name="close" size="md" class="cursor-pointer" @click="cardStore.showFusionDialog = false"/>
       </q-toolbar>
       <template v-if="cardStore.selectedCardFusions.to.length">
         <span class="text-h5 q-pl-md">To this card</span>
         <q-card-section class="row q-col-gutter-md">
           <div v-for="fusion of cardStore.selectedCardFusions.to">
-            <FusionRow :fusion="fusion" />
+            <FusionRow :fusion="fusion"/>
           </div>
         </q-card-section>
       </template>
@@ -47,7 +54,7 @@
         <span class="text-h5 q-pl-md">With this card</span>
         <q-card-section class="row q-col-gutter-md">
           <div v-for="fusion of cardStore.selectedCardFusions.with">
-            <FusionRow :fusion="fusion" />
+            <FusionRow :fusion="fusion"/>
           </div>
         </q-card-section>
       </template>
@@ -59,6 +66,7 @@
 import {provide, ref} from 'vue';
 import FusionRow from 'components/FusionRow.vue';
 import useCardStore from 'stores/card';
+import {PortalTarget} from 'portal-vue';
 
 //#region Composable & Prepare
 const cardStore = useCardStore();
@@ -79,6 +87,23 @@ const drawerWidth = ref(200);
 //#endregion
 
 //#region Methods
+function close(event: MouseEvent) {
+  if (!drawer.value) {
+    return;
+  }
+
+  let element = event.target as HTMLElement;
+  while (element.parentElement) {
+    if (element.parentElement.classList.contains('q-drawer-container')) {
+      return;
+    }
+
+    element = element.parentElement;
+  }
+
+  drawer.value = false;
+}
+
 //#endregion
 
 //#region Created
