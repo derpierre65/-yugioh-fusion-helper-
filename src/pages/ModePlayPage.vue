@@ -51,20 +51,20 @@
           <div class="flex q-col-gutter-sm">
             <div style="min-width:700px;">
               <div style="position: sticky; top: 100px;">
-                <template v-if="playStore.fieldCards.length">
-                  <div class="text-h6">Your field cards</div>
-                  <div class="row">
-                    <PlayCard v-for="id in playStore.fieldCards" :id="id">
-                      <q-btn label="Destroy" color="red" @click="destroyFieldCard(id)"/>
-                    </PlayCard>
-                  </div>
-                </template>
                 <template v-if="playStore.cards.length">
                   <div class="text-h6 q-py-sm">Your hand cards</div>
                   <div class="row">
                     <PlayCard v-for="id in playStore.cards" :id="id">
                       <q-btn label="Play" color="primary" @click="playCard(id)"/>
                       <q-btn label="To deck" color="primary" @click="cardBackToDeck(id)"/>
+                    </PlayCard>
+                  </div>
+                </template>
+                <template v-if="playStore.fieldCards.length">
+                  <div class="text-h6">Your field cards</div>
+                  <div class="row">
+                    <PlayCard v-for="id in playStore.fieldCards" :id="id">
+                      <q-btn label="Destroy" color="red" @click="destroyFieldCard(id)"/>
                     </PlayCard>
                   </div>
                 </template>
