@@ -108,7 +108,6 @@ const deckStore = useDeckStore();
 
 //region Data
 const newCards = ref('');
-const deckDrawer = ref(false);
 //endregion
 
 //#region Computed
@@ -234,7 +233,7 @@ function addToHand(id: string) {
   addCards();
   newCards.value = beforeValue;
   if (playStore.cards.length >= 5) {
-    deckDrawer.value = false;
+    drawer.value = false;
   }
 }
 
