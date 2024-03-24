@@ -3,12 +3,19 @@
     <div class="row q-col-gutter-md no-wrap">
       <div style="min-width:200px;">
         <q-list bordered separator style="position:sticky; top:100px;">
-          <q-item v-for="(person, index) of persons" clickable @click="selectedPerson = index">
+          <q-item
+              v-for="(person, index) of persons"
+              :active="selectedPerson === index"
+              clickable
+              @click="selectedPerson = index"
+          >
             <q-item-section>{{ person.name }}</q-item-section>
           </q-item>
         </q-list>
       </div>
       <div class="col-grow col-shrink full-width q-gutter-y-md">
+        <div class="text-h5">{{persons[selectedPerson].name}}</div>
+
         <AppCard title="Deck" expandable>
           <div class="flex">
             <PlayCard v-for="id in persons[selectedPerson].deck" :id="id"/>
