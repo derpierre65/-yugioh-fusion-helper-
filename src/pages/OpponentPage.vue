@@ -17,7 +17,12 @@
         />
       </div>
       <div class="col-grow col-shrink full-width q-gutter-y-md">
-        <div class="text-h5">{{persons[selectedPerson].name}}</div>
+        <div class="text-h5">
+          <a :href="`https://yugipedia.com/wiki/${persons[selectedPerson].urlPath}`" target="_blank">
+            <span>{{ persons[selectedPerson].name }}</span>
+            <q-icon class="fas fa-external-link q-ml-xs"/>
+          </a>
+        </div>
 
         <AppCard title="Deck" expandable>
           <div class="flex">
