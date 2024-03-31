@@ -6,7 +6,7 @@
 
     <portal to="drawer">
       <div class="flex justify-end">
-        <q-icon name="close" size="md" class="cursor-pointer" @click="drawer = false">
+        <q-icon name="fas fa-times" class="cursor-pointer" @click="drawer = false">
           <q-tooltip>Close</q-tooltip>
         </q-icon>
       </div>

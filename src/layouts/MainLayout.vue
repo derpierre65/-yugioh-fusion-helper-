@@ -49,7 +49,7 @@
     <q-card class="full-width">
       <q-toolbar>
         <q-toolbar-title>{{ cardStore.cards[cardStore.showFusionCard].name }} Fusions</q-toolbar-title>
-        <q-icon name="close" size="md" class="cursor-pointer" @click="cardStore.showFusionDialog = false"/>
+        <q-icon name="fas fa-times" class="cursor-pointer" @click="cardStore.showFusionDialog = false"/>
       </q-toolbar>
       <template v-if="cardStore.selectedCardFusions.to.length">
         <span class="text-h5 q-pl-md">To this card</span>
