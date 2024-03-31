@@ -9,8 +9,10 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
 const { configure } = require('quasar/wrappers');
+const generateFile = require('vite-plugin-generate-file');
 
 process.env.VITE_PACKAGE_VERSION = process.env.npm_package_version;
+process.env.VITE_BUILD_TIME = Date.now().toString();
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -72,9 +74,18 @@ module.exports = configure(function (/* ctx */) {
       // viteVuePluginOptions: {},
 
 
-      // vitePlugins: [
-      //   [ 'package-name', { ..options.. } ]
-      // ]
+      vitePlugins: [
+        generateFile([
+          {
+            type: 'json',
+            output: './assets/version.json',
+            data: {
+              version: process.env.VITE_PACKAGE_VERSION,
+              date: parseInt(process.env.VITE_BUILD_TIME),
+            },
+          },
+        ]),
+      ],
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
