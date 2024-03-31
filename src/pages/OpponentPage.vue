@@ -22,14 +22,6 @@
           </div>
         </AppCard>
 
-        <AppCard title="TEC S/A Drops" show expandable>
-          <div class="flex">
-            <PlayCard v-for="drop in tecSADrops" :id="drop.id">
-              {{ drop.percent }}% ({{ drop[2048] }}/2048)
-            </PlayCard>
-          </div>
-        </AppCard>
-
         <AppCard title="POW S/A Drops" show expandable>
           <div class="flex">
             <PlayCard v-for="drop in powSADrops" :id="drop.id">
@@ -38,7 +30,15 @@
           </div>
         </AppCard>
 
-        <AppCard title="POW/TEC: B/C/D Drops" show expandable>
+        <AppCard title="TEC S/A Drops" show expandable>
+          <div class="flex">
+            <PlayCard v-for="drop in tecSADrops" :id="drop.id">
+              {{ drop.percent }}% ({{ drop[2048] }}/2048)
+            </PlayCard>
+          </div>
+        </AppCard>
+
+        <AppCard title="POW/TEC: B/C/D Drops" expandable>
           <div class="flex">
             <PlayCard v-for="drop in bcdDrops" :id="drop.id">
               {{ drop.percent }}% ({{ drop[2048] }}/2048)
