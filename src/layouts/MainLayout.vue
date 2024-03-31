@@ -35,6 +35,16 @@
     </q-drawer>
   </q-layout>
 
+  <q-dialog v-model="globalStore.updateAvailable" seamless position="bottom">
+    <q-card class="tw-w-96" dark>
+      <q-card-section class="row items-center no-wrap">
+        <div>New version available</div>
+        <q-space />
+        <q-btn color="primary" label="Refresh" @click="reloadApplication" />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
   <q-dialog v-model="cardStore.showFusionDialog" full-width>
     <q-card class="full-width">
       <q-toolbar>
@@ -67,9 +77,12 @@ import {provide, ref} from 'vue';
 import FusionRow from 'components/FusionRow.vue';
 import useCardStore from 'stores/card';
 import {PortalTarget} from 'portal-vue';
+import useGlobalStore from 'stores/global';
+import axios from 'axios';
 
 //#region Composable & Prepare
 const cardStore = useCardStore();
+const globalStore = useGlobalStore();
 //#endregion
 
 //#region Data
@@ -105,9 +118,32 @@ function close(event: MouseEvent) {
   drawer.value = false;
 }
 
+function reloadApplication() {
+  window.location.reload();
+}
 //#endregion
 
 //#region Created
+window.setInterval(() => {
+  if (globalStore.updateAvailable) {
+    return;
+  }
+
+  type UpdateInfo = {
+    version: string;
+    date: number;
+  };
+
+  axios
+      .get<UpdateInfo>('/assets/version.json')
+      .then(({data}) => {
+        if ( data.date !== parseInt(import.meta.env.VITE_BUILD_TIME) ) {
+          globalStore.$patch({
+            updateAvailable: true,
+          });
+        }
+      })
+}, 60_000);
 //#endregion
 
 provide('drawer', {
