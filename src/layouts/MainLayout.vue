@@ -46,28 +46,27 @@
   </q-dialog>
 
   <q-dialog v-model="cardStore.showFusionDialog" full-width>
-    <q-card class="full-width">
+    <q-card class="full-width" style="background: var(--q-dark-page)">
       <q-toolbar>
         <q-toolbar-title>{{ cardStore.cards[cardStore.showFusionCard].name }} Fusions</q-toolbar-title>
         <q-icon name="fas fa-times" class="cursor-pointer" @click="cardStore.showFusionDialog = false"/>
       </q-toolbar>
-      <template v-if="cardStore.selectedCardFusions.to.length">
-        <span class="text-h5 q-pl-md">To this card</span>
-        <q-card-section class="row q-col-gutter-md">
-          <div v-for="fusion of cardStore.selectedCardFusions.to">
-            <FusionRow :fusion="fusion"/>
-          </div>
-        </q-card-section>
-      </template>
-
-      <template v-if="cardStore.selectedCardFusions.with.length">
-        <span class="text-h5 q-pl-md">With this card</span>
-        <q-card-section class="row q-col-gutter-md">
-          <div v-for="fusion of cardStore.selectedCardFusions.with">
-            <FusionRow :fusion="fusion"/>
-          </div>
-        </q-card-section>
-      </template>
+      <q-card-section class="q-gutter-y-md">
+        <AppCard v-if="cardStore.selectedCardFusions.to.length" title="To this card" expandable show>
+          <q-card-section class="row q-col-gutter-md">
+            <div v-for="fusion of cardStore.selectedCardFusions.to">
+              <FusionRow :fusion="fusion"/>
+            </div>
+          </q-card-section>
+        </AppCard>
+        <AppCard v-if="cardStore.selectedCardFusions.with.length" title="With this card" expandable show>
+          <q-card-section class="row q-col-gutter-md">
+            <div v-for="fusion of cardStore.selectedCardFusions.with">
+              <FusionRow :fusion="fusion"/>
+            </div>
+          </q-card-section>
+        </AppCard>
+      </q-card-section>
     </q-card>
   </q-dialog>
 </template>
@@ -79,6 +78,7 @@ import useCardStore from 'stores/card';
 import {PortalTarget} from 'portal-vue';
 import useGlobalStore from 'stores/global';
 import axios from 'axios';
+import AppCard from 'components/AppCard.vue';
 
 //#region Composable & Prepare
 const cardStore = useCardStore();
