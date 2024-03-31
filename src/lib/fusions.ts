@@ -1,7 +1,7 @@
 import fusionList from 'src/assets/fusions.json';
 import useCardStore from 'stores/card';
 
-console.log(`Loaded ${Object.values(fusionList).reduce((prev, val) => val.length + prev, 0)} possible fusions`);
+console.log(`Loaded ${Object.values(fusionList).reduce((prev, val) => val.length + prev, 0)} possible fusions.`);
 
 function findFusions(level: number, ids: string[], fusionCombination: string[], mustInclude: string | false): string[] {
     const possibleFusions: string[] = [];
@@ -11,7 +11,9 @@ function findFusions(level: number, ids: string[], fusionCombination: string[], 
                 continue;
             }
 
-            const thisFusion = `${Math.min(material1Id, material2Id)}+${Math.max(material1Id, material2Id)}`;
+            const firstId = parseInt(material1Id);
+            const secondId = parseInt(material2Id);
+            const thisFusion = `${Math.min(firstId, secondId)}+${Math.max(firstId, secondId)}`;
             if (!possibleFusions.includes(thisFusion)) {
                 possibleFusions.push(thisFusion);
             }
@@ -66,30 +68,6 @@ function getIdsByString(cards: string) {
         .filter(value => value && cardStore.cards[value]);
 }
 
-// function askForCards(rl) {
-//     rl.question('Your cards? ', (cards) => {
-//         const ids = cards
-//             .split(',')
-//             .map((value) => value.split(' '))
-//             .reduce((prev, value) => {
-//                 prev.push(...value);
-//
-//                 return prev;
-//             }, []).filter(value => value);
-//
-//         const possible = findFusions(1, ids, []);
-//         if (possible.length === 0) {
-//             console.log('No fusions available :(');
-//         }
-//
-//         for (const entry of possible) {
-//             console.log(`Fusion with ${entry.length + 1} card(s) available: `, entry.join('+'), entry)
-//         }
-//
-//         askForCards(rl);
-//     });
-// }
-
 function formatFusionList(foundFusions: string[]) {
     const cardStore = useCardStore();
     const fusionList = [];
@@ -105,7 +83,8 @@ function formatFusionList(foundFusions: string[]) {
     return fusionList.sort((a,b) => {
         const aCard = cardStore.cards[a.final];
         const bCard = cardStore.cards[b.final];
-        return aCard.atk < bCard.atk ? 1 : -1;
+
+        return (aCard.atk || 0) < (bCard.atk || 0) ? 1 : -1;
     });
 }
 
