@@ -3,46 +3,51 @@ import fs from "fs";
 import {baseDirname, fetchCard} from "./cards.js";
 import {load} from "cheerio";
 
+function dd(...args) {
+    console.log(...args);
+    process.exit();
+}
+
 const wikiUrl = 'https://yugipedia.com/wiki/';
 const persons = [
-    'Simon_Muran_(FMR)',
-    'Teana',
-    'Jono',
-    'Villager1',
-    'Villager2',
-    'Villager3',
-    'Seto_(FMR)',
-    'Heishin',
-    'Rex_Raptor_(FMR)',
-    'Weevil_Underwood_(FMR)',
-    'Mai_Valentine_(FMR)',
-    'Bandit_Keith_(FMR)',
-    'Shadi_(FMR)',
-    'Yami_Bakura_(FMR)',
-    'Pegasus_(FMR)',
-    'Isis_(FMR)',
-    'Kaiba_(FMR)',
-    'Mage Soldier',
-    'Jono 2nd',
-    'Teana 2nd',
-    'Ocean Mage',
-    'High Mage Secmeton',
-    'Forest Mage',
-    'High Mage Anubisius',
-    'Mountain Mage',
-    'High Mage Atenza',
-    'Desert Mage',
-    'High Mage Martis',
-    'Meadow Mage',
-    'High Mage Kepura',
-    'Labyrinth Mage',
-    'Seto 2nd',
-    'Sebek',
+    // 'Simon_Muran_(FMR)',
+    // 'Teana',
+    // 'Jono',
+    // 'Villager1',
+    // 'Villager2',
+    // 'Villager3',
+    // 'Seto_(FMR)',
+    // 'Heishin',
+    // 'Rex_Raptor_(FMR)',
+    // 'Weevil_Underwood_(FMR)',
+    // 'Mai_Valentine_(FMR)',
+    // 'Bandit_Keith_(FMR)',
+    // 'Shadi_(FMR)',
+    // 'Yami_Bakura_(FMR)',
+    // 'Pegasus_(FMR)',
+    // 'Isis_(FMR)',
+    // 'Kaiba_(FMR)',
+    // 'Mage Soldier',
+    // 'Jono 2nd',
+    // 'Teana 2nd',
+    // 'Ocean Mage',
+    // 'High Mage Secmeton',
+    // 'Forest Mage',
+    // 'High Mage Anubisius',
+    // 'Mountain Mage',
+    // 'High Mage Atenza',
+    // 'Desert Mage',
+    // 'High Mage Martis',
+    // 'Meadow Mage',
+    // 'High Mage Kepura',
+    // 'Labyrinth Mage',
+    // 'Seto 2nd',
+    // 'Sebek',
     'Neku',
-    'Heishin 2nd',
-    'Seto 3rd',
-    'DarkNite',
-    'Nitemare',
+    // 'Heishin 2nd',
+    // 'Seto 3rd',
+    // 'DarkNite',
+    // 'Nitemare',
     'Duel Master K',
 ];
 let personDecks = [];
@@ -60,26 +65,30 @@ function formatPersonName(personName) {
     return personName.replace('(FMR)', '').replace(/_/g, ' ').trim();
 }
 
-async function fetchPersonDetails($, personName, deckTbody, tabs) {
+async function fetchPersonDetails($, personName, deckTbody, tabs, urlPath) {
     const personIndex = personDecks.findIndex((person) => person.name === personName);
     const person = personIndex >= 0 ? personDecks[personIndex] : {
         name: personName,
+        urlPath,
         deck: [],
         drops: [],
     };
 
     // fetch deck of the person
     const deck = [];
-    for (const tr of $(deckTbody).find('tr')) {
-        const tds = $(tr).find('td');
-        const id = parseInt($(tds[0]).text());
-        if (isNaN(id)) {
-            continue;
+
+    if ( $(deckTbody).parent().parent().hasClass('mw-parser-output') ) {
+        for (const tr of $(deckTbody).find('tr')) {
+            const tds = $(tr).find('td');
+            const id = parseInt($(tds[0]).text());
+            if (isNaN(id)) {
+                continue;
+            }
+
+            await fetchCard(id, $(tds[1]).text());
+
+            deck.push(id);
         }
-
-        await fetchCard(id, $(tds[1]).text());
-
-        deck.push(id);
     }
 
     person.deck = deck;
@@ -107,6 +116,7 @@ async function fetchPersonDetails($, personName, deckTbody, tabs) {
     }
 
     person.drops = drops;
+    person.urlPath = urlPath;
 
     if (personIndex === -1) {
         personDecks.push(person);
@@ -115,23 +125,28 @@ async function fetchPersonDetails($, personName, deckTbody, tabs) {
     savePersons();
 }
 
-async function fetchPerson(personName, html) {
+async function fetchPerson(urlPath, html) {
     const $ = load(html);
     const npcNames = [];
-    for (const element of $('.toclevel-1.tocsection-5 li .toctext')) {
+    for (const element of $('.toclevel-1.tocsection-2 li .toctext')) {
         npcNames.push($(element).text());
     }
 
     const tabs = $('.tabbertab');
     if (!npcNames.length) {
+        const npcName = formatPersonName($('#firstHeading').text());
+        console.log('fetch as single person:', npcName);
+
         return await fetchPersonDetails(
             $,
-            formatPersonName($('#firstHeading').text()),
+            npcName,
             $('table.card-list:first').find('tbody'),
             tabs,
+            urlPath,
         );
     }
-    console.log('fetch as person', npcNames);
+
+    console.log('fetch as multiple persons:', npcNames);
 
     const deckTables = $('table.card-list').filter((_, element) => $(element.parent).hasClass('mw-parser-output'));
     for (const [index, npcName] of npcNames.entries()) {
@@ -140,6 +155,7 @@ async function fetchPerson(personName, html) {
             npcName,
             $(deckTables[index]).find('tbody'),
             tabs.slice(index * 3, (index + 1) * 3),
+            urlPath,
         );
     }
 }
