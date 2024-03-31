@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.4.0 - 2024-03-31]
 ### Added
 - Select field instead of list in opponents to select an opponent.
-- Switch Pow with Tec drops. 
+- Switch Pow with Tec drops.
+- Show update available snackbar on updates.
 ### Fixed
 - Wrong deck and drop cards for some persons where 2nd or 3rd are available (e.g. Seto).
