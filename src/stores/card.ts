@@ -38,17 +38,21 @@ const useCardStore = defineStore('card', {
     },
     getters: {
         allFusions(): string[] {
-            const keys = Object.keys(fusionList);
-
-            return keys.reduce((prev, key) => prev.concat(...fusionList[key].map((fusion) => `${fusion}=${key}`)), []);
+            return Object
+                .keys(fusionList)
+                .reduce((prev, key) => {
+                    return prev.concat(...fusionList[key].map((fusion) => `${fusion}=${key}`));
+                }, []);
         },
         selectedCardFusions(state): { with: string[], to: string[] } {
             const cardId = state.showFusionCard;
             const cardFusions = this.allFusions.filter((fusionId: string) => fusionId.startsWith(`${cardId}+`) || fusionId.includes(`+${cardId}=`));
+            const toFusions = formatFusionList((fusionList[cardId] || []).map((fusion) => `${fusion}=${cardId}`));
+            const withCard = formatFusionList(cardFusions || []);
 
             return {
-                to: formatFusionList((fusionList[cardId] || []).map((fusion) => `${fusion}=${cardId}`)),
-                with: formatFusionList(cardFusions || []),
+                to: toFusions,
+                with: withCard,
             };
         },
     },

@@ -1,9 +1,10 @@
 <template>
-  <div v-if="cardDetails">
-    <div :style="imageStyle" />
   <div v-if="cardDetails" @mouseenter="showButtons = true" @mouseleave="showButtons = false">
     <div :style="imageStyle" class="relative-position">
       <div v-if="showButtons" class="tw-absolute tw-top-2 tw-right-2 q-gutter-x-sm tw-h-[24px] tw-z-10">
+        <q-btn v-if="cardDetails.password && cardDetails.cost && !savegameStore.passwordsUsed.includes(cardDetails.password)" icon="fas fa-key" color="primary" size="sm" dense @click="savegameStore.usePassword(cardDetails.password)">
+          <q-tooltip>Password used</q-tooltip>
+        </q-btn>
         <q-btn icon="fas fa-clipboard-list" color="primary" size="sm" dense @click="savegameStore.addToWishlist(id)">
           <q-tooltip>Add to Wishlist</q-tooltip>
         </q-btn>

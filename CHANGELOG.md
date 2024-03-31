@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0 - 2024-04-01]
+### Added
+- Fusions (to this card, with this card) are now collapsable.
+- Drop Rates are now above the card name.
+- List of used passwords.
+### Changed
+- Replace hash routing to history routing (/#/my-deck is now /my-deck/).
+- Replaced action links with buttons, there are visible on mouseover.
+### Fixed
+- Wrong close button in fusion and add from deck dialog.
+- All cards in a fusion row are now on the same height.
+
 ## [0.4.1 - 2024-03-31]
 ### Added
 - Enable dark mode by default.

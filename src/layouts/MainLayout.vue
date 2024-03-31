@@ -10,12 +10,13 @@
       </q-toolbar>
 
       <q-tabs align="left">
-        <q-route-tab to="/" label="Normal Mode"/>
-        <q-route-tab :to="{name: 'play'}" label="Play Mode"/>
-        <q-route-tab to="/database" label="Database"/>
-        <q-route-tab :to="{name: 'my-deck'}" label="My Deck"/>
-        <q-route-tab :to="{name: 'opponents'}" label="Opponents"/>
-        <q-route-tab :to="{name: 'wishlist'}" label="Wishlist"/>
+        <q-route-tab to="/" label="Normal Mode" no-caps />
+        <q-route-tab :to="{name: 'play'}" label="Play Mode" no-caps />
+        <q-route-tab :to="{name: 'my-deck'}" label="My Deck" no-caps />
+        <q-route-tab :to="{name: 'password-used'}" label="Passwords used" no-caps />
+        <q-route-tab :to="{name: 'wishlist'}" label="Wishlist" no-caps />
+        <q-route-tab to="/database" label="Card Database" class="q-ml-lg" no-caps />
+        <q-route-tab :to="{name: 'opponents'}" label="Opponents" no-caps />
       </q-tabs>
     </q-header>
 
@@ -54,14 +55,14 @@
       <q-card-section class="q-gutter-y-md">
         <AppCard v-if="cardStore.selectedCardFusions.to.length" title="To this card" expandable show>
           <q-card-section class="row q-col-gutter-md">
-            <div v-for="fusion of cardStore.selectedCardFusions.to">
+            <div v-for="fusion of cardStore.selectedCardFusions.to" :key="fusion">
               <FusionRow :fusion="fusion"/>
             </div>
           </q-card-section>
         </AppCard>
         <AppCard v-if="cardStore.selectedCardFusions.with.length" title="With this card" expandable show>
           <q-card-section class="row q-col-gutter-md">
-            <div v-for="fusion of cardStore.selectedCardFusions.with">
+            <div v-for="fusion of cardStore.selectedCardFusions.with" :key="fusion">
               <FusionRow :fusion="fusion"/>
             </div>
           </q-card-section>

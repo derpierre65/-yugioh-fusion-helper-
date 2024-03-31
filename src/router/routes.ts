@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+import {RouteRecordRaw} from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -9,6 +9,7 @@ const routes: RouteRecordRaw[] = [
       { name: 'play', path: 'mode/play', component: () => import('pages/ModePlayPage.vue') },
       { path: 'database', component: () => import('pages/DatabasePage.vue') },
       { name: 'my-deck', path: 'my-deck', component: () => import('pages/MyDeckPage.vue') },
+      { name: 'password-used', path: 'password-used', component: () => import('pages/savegame/PasswordUsed.vue') },
       { name: 'opponents', path: 'opponents', component: () => import('pages/OpponentPage.vue') },
       { name: 'wishlist', path: 'wishlist', component: () => import('pages/WishlistPage.vue') },
     ],

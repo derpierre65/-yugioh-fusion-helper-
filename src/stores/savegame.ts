@@ -6,6 +6,8 @@ const useSavegameStore = defineStore('savegame', {
     persist: true,
     state() {
         return {
+            stars: 0,
+            passwordsUsed: [] as string[],
             // wishlist
             wishlist: {} as Record<string, number>,
             // fusion done with the own deck
@@ -21,6 +23,11 @@ const useSavegameStore = defineStore('savegame', {
         };
     },
     actions: {
+        usePassword(password: string) {
+            if (!this.passwordsUsed.includes(password)) {
+                this.passwordsUsed.push(password);
+            }
+        },
         addFusion(id: string) {
             if (!this.deckFusions[id]) {
                 this.deckFusions[id] = 0;
