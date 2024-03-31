@@ -8,9 +8,9 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-
 const { configure } = require('quasar/wrappers');
 
+process.env.VITE_PACKAGE_VERSION = process.env.npm_package_version;
 
 module.exports = configure(function (/* ctx */) {
   return {

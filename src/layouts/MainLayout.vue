@@ -6,7 +6,7 @@
           Yu-Gi-Oh! Forbidden Memories Fusion Helper
         </q-toolbar-title>
 
-        <div>v0.3.0</div>
+        <div>v{{version}}</div>
       </q-toolbar>
 
       <q-tabs align="left">
@@ -75,6 +75,7 @@ const cardStore = useCardStore();
 //#region Data
 const drawer = ref(false);
 const drawerWidth = ref(200);
+const version = import.meta.env.VITE_PACKAGE_VERSION;
 //#endregion
 
 //#region Computed
