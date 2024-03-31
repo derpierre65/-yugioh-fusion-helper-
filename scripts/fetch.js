@@ -1,7 +1,7 @@
 import axios from 'axios';
 import fs from "fs";
 import {load} from "cheerio";
-import {baseDirname, fetchCard} from "app/scripts/cards.js";
+import {baseDirname, fetchCard} from "./cards.js";
 
 const urls = [
     'https://yugipedia.com/wiki/List_of_Yu-Gi-Oh!_Forbidden_Memories_Fusions_(001%E2%80%93200)',
