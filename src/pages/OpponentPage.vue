@@ -21,6 +21,7 @@
           <a :href="`https://yugipedia.com/wiki/${persons[selectedPerson].urlPath}`" target="_blank" class="text-white">
             <span>{{ persons[selectedPerson].name }}</span>
             <q-icon class="fas fa-external-link q-ml-xs"/>
+            <q-tooltip>Open in Yugipedia</q-tooltip>
           </a>
         </div>
 
