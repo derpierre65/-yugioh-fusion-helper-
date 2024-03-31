@@ -6,7 +6,7 @@
           Yu-Gi-Oh! Forbidden Memories Fusion Helper
         </q-toolbar-title>
 
-        <div>v{{version}}</div>
+        <div>v{{ version }} ({{ buildDate }})</div>
       </q-toolbar>
 
       <q-tabs align="left">
@@ -80,6 +80,7 @@ import {PortalTarget} from 'portal-vue';
 import useGlobalStore from 'stores/global';
 import axios from 'axios';
 import AppCard from 'components/AppCard.vue';
+import {date} from 'quasar';
 
 //#region Composable & Prepare
 const cardStore = useCardStore();
@@ -90,6 +91,7 @@ const globalStore = useGlobalStore();
 const drawer = ref(false);
 const drawerWidth = ref(200);
 const version = import.meta.env.VITE_PACKAGE_VERSION;
+const buildDate = date.formatDate(new Date(parseInt(import.meta.env.VITE_BUILD_TIME)), 'YYYY-MM-DD HH:mm:ss');
 //#endregion
 
 //#region Computed

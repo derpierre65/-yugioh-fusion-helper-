@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - More tooltips.
 - Move remove button to hover buttons in wishlist, my deck and passwords used.
+- Build date to version (top right).
 ## Fixed
 - Remove duplicated password/cost in wishlist.
 
