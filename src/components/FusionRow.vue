@@ -1,15 +1,15 @@
 <template>
   <q-card>
     <q-card-section>
-      <div class="flex items-center q-col-gutter-sm">
+      <div class="flex items-start q-col-gutter-sm">
         <slot />
         <template v-for="(card, index) in fusion.merge">
-          <span v-if="index !== 0" class="text-h4">+</span>
+          <div v-if="index > 0" class="text-h4 self-center tw-mb-12">+</div>
           <PlayCard :id="card">
             <slot name="card" v-bind="{card}" />
           </PlayCard>
         </template>
-        <span class="text-h4">=</span>
+        <span class="text-h4 self-center tw-mb-12">=</span>
         <PlayCard :id="fusion.final">
           <slot name="final-card" v-bind="{card: fusion.final}">
             <slot v-if="useCardAsFinal" name="card" v-bind="{card: fusion.final}" />
