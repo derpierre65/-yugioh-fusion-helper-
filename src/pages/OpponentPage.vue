@@ -33,7 +33,9 @@
         <AppCard title="POW S/A Drops" show expandable>
           <div class="flex">
             <PlayCard v-for="drop in powSADrops" :id="drop.id">
-              {{ drop.percent }}% ({{ drop[2048] }}/2048)
+              <template #before-name>
+                {{ drop.percent }}% ({{ drop[2048] }}/2048)<br>
+              </template>
             </PlayCard>
           </div>
         </AppCard>
@@ -41,7 +43,9 @@
         <AppCard title="TEC S/A Drops" show expandable>
           <div class="flex">
             <PlayCard v-for="drop in tecSADrops" :id="drop.id">
-              {{ drop.percent }}% ({{ drop[2048] }}/2048)
+              <template #before-name>
+                {{ drop.percent }}% ({{ drop[2048] }}/2048)<br>
+              </template>
             </PlayCard>
           </div>
         </AppCard>
@@ -49,7 +53,9 @@
         <AppCard title="POW/TEC: B/C/D Drops" expandable>
           <div class="flex">
             <PlayCard v-for="drop in bcdDrops" :id="drop.id">
-              {{ drop.percent }}% ({{ drop[2048] }}/2048)
+              <template #before-name>
+                {{ drop.percent }}% ({{ drop[2048] }}/2048)<br>
+              </template>
             </PlayCard>
           </div>
         </AppCard>
@@ -95,7 +101,7 @@ const selectablePersons = computed(() => {
 //#endregion
 
 //#region Methods
-function getDrops(type) {
+function getDrops(type: string) {
   return () => {
     const drops = persons[selectedPerson.value].drops;
 
