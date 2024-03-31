@@ -1,12 +1,23 @@
 <template>
   <div v-if="cardDetails">
     <div :style="imageStyle" />
+  <div v-if="cardDetails" @mouseenter="showButtons = true" @mouseleave="showButtons = false">
+    <div :style="imageStyle" class="relative-position">
+      <div v-if="showButtons" class="tw-absolute tw-top-2 tw-right-2 q-gutter-x-sm tw-h-[24px] tw-z-10">
+        <q-btn icon="fas fa-clipboard-list" color="primary" size="sm" dense @click="savegameStore.addToWishlist(id)">
+          <q-tooltip>Add to Wishlist</q-tooltip>
+        </q-btn>
+        <q-btn icon="fas fa-atom" color="primary" size="sm" dense @click="cardStore.showFusion(id)">
+          <q-tooltip>Show Fusions</q-tooltip>
+        </q-btn>
+      </div>
+    </div>
     <div class="text-center" style="max-width:140px;">
       {{id}}<br>
       <template v-if="$route.name !== 'play'">
-        <a href="#" @click.prevent="savegameStore.addToWishlist(id)">Add to Wishlist</a><br>
-        <a href="#" @click.prevent="cardStore.showFusion(id)">Show Fusions</a><br>
-        {{ cardStore.cards[id].password }} = {{ cardStore.cards[id].cost }}<br>
+        <template v-if="cardDetails.password && cardDetails.cost">
+          {{ cardDetails.password }} = {{ cardDetails.cost }}<br>
+        </template>
         <slot name="before-name" />
         <a :href="getLink(id)" target="_blank">{{ cardStore.cards[id].name }}</a><br>
       </template>
@@ -21,7 +32,7 @@
 
 <script setup lang="ts">
 import useCardStore from 'stores/card';
-import {computed} from 'vue';
+import {computed, ref} from 'vue';
 import useSavegameStore from 'stores/savegame';
 
 //#region Composable & Prepare
@@ -39,6 +50,7 @@ const savegameStore = useSavegameStore();
 //#endregion
 
 //#region Data
+const showButtons = ref(false);
 //#endregion
 
 //#region Computed
