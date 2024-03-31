@@ -10,46 +10,47 @@ function dd(...args) {
 
 const wikiUrl = 'https://yugipedia.com/wiki/';
 const persons = [
-    // 'Simon_Muran_(FMR)',
-    // 'Teana',
-    // 'Jono',
-    // 'Villager1',
-    // 'Villager2',
-    // 'Villager3',
-    // 'Seto_(FMR)',
-    // 'Heishin',
-    // 'Rex_Raptor_(FMR)',
-    // 'Weevil_Underwood_(FMR)',
-    // 'Mai_Valentine_(FMR)',
-    // 'Bandit_Keith_(FMR)',
-    // 'Shadi_(FMR)',
-    // 'Yami_Bakura_(FMR)',
-    // 'Pegasus_(FMR)',
-    // 'Isis_(FMR)',
-    // 'Kaiba_(FMR)',
-    // 'Mage Soldier',
-    // 'Jono 2nd',
-    // 'Teana 2nd',
-    // 'Ocean Mage',
-    // 'High Mage Secmeton',
-    // 'Forest Mage',
-    // 'High Mage Anubisius',
-    // 'Mountain Mage',
-    // 'High Mage Atenza',
-    // 'Desert Mage',
-    // 'High Mage Martis',
-    // 'Meadow Mage',
-    // 'High Mage Kepura',
-    // 'Labyrinth Mage',
-    // 'Seto 2nd',
-    // 'Sebek',
+    'Simon_Muran_(FMR)',
+    'Teana',
+    'Jono',
+    'Villager1',
+    'Villager2',
+    'Villager3',
+    'Seto_(FMR)',
+    'Heishin',
+    'Rex_Raptor_(FMR)',
+    'Weevil_Underwood_(FMR)',
+    'Mai_Valentine_(FMR)',
+    'Bandit_Keith_(FMR)',
+    'Shadi_(FMR)',
+    'Yami_Bakura_(FMR)',
+    'Pegasus_(FMR)',
+    'Isis_(FMR)',
+    'Kaiba_(FMR)',
+    'Mage Soldier',
+    'Jono 2nd',
+    'Teana 2nd',
+    'Ocean Mage',
+    'High Mage Secmeton',
+    'Forest Mage',
+    'High Mage Anubisius',
+    'Mountain Mage',
+    'High Mage Atenza',
+    'Desert Mage',
+    'High Mage Martis',
+    'Meadow Mage',
+    'High Mage Kepura',
+    'Labyrinth Mage',
+    'Seto 2nd',
+    'Sebek',
     'Neku',
-    // 'Heishin 2nd',
-    // 'Seto 3rd',
-    // 'DarkNite',
-    // 'Nitemare',
+    'Heishin 2nd',
+    'Seto 3rd',
+    'DarkNite',
+    'Nitemare',
     'Duel Master K',
 ];
+const originalPersonNames = persons.map((name) => formatPersonName(name));
 let personDecks = [];
 
 try {
@@ -68,6 +69,7 @@ function formatPersonName(personName) {
 async function fetchPersonDetails($, personName, deckTbody, tabs, urlPath) {
     const personIndex = personDecks.findIndex((person) => person.name === personName);
     const person = personIndex >= 0 ? personDecks[personIndex] : {
+        order: originalPersonNames.indexOf(personName),
         name: personName,
         urlPath,
         deck: [],
@@ -117,6 +119,7 @@ async function fetchPersonDetails($, personName, deckTbody, tabs, urlPath) {
 
     person.drops = drops;
     person.urlPath = urlPath;
+    person.order = originalPersonNames.indexOf(personName);
 
     if (personIndex === -1) {
         personDecks.push(person);
