@@ -16,7 +16,7 @@
     </div>
     <!--endregion-->
 
-    <q-banner class="bg-yellow-2 q-my-md">Fusions are overall fusions not only available fusions within your deck.</q-banner>
+    <q-banner class="bg-yellow-9 q-my-md text-black">Fusions are overall fusions not only available fusions within your deck.</q-banner>
 
     <div class="text-h6">Your deck {{ deckStore.cards.length }}/40:</div>
     <div class="flex">

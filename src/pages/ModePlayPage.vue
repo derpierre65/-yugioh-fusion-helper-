@@ -45,13 +45,13 @@
             <div class="text-h6 q-py-sm">Your hand cards</div>
             <div class="row">
               <PlayCard v-for="id in playStore.cards" :id="id">
-                <q-btn label="Play" color="primary" @click="playCard(id)"/>
+                <q-btn label="Play" color="positive" @click="playCard(id)"/>
                 <q-btn label="To deck" color="primary" @click="cardBackToDeck(id)"/>
               </PlayCard>
             </div>
           </template>
           <template v-if="playStore.fieldCards.length">
-            <div class="text-h6">Your field cards</div>
+            <div class="text-h6 q-mt-md">Your field cards</div>
             <div class="row">
               <PlayCard v-for="id in playStore.fieldCards" :id="id">
                 <q-btn label="Destroy" color="red" @click="destroyFieldCard(id)"/>
@@ -67,7 +67,7 @@
             <template v-for="(fieldCardFusions, fieldCardId) in fieldFusions">
               <FusionRow v-for="fusion in fieldCardFusions" :fusion="fusion">
                 <div>
-                  <q-btn label="Select" @click="selectFusion(fusion, fieldCardId)"/>
+                  <q-btn label="Select" color="primary" @click="selectFusion(fusion, fieldCardId)"/>
                 </div>
               </FusionRow>
             </template>
@@ -78,7 +78,7 @@
         <div v-if="handFusions.length">
           <FusionRow v-for="fusion in handFusions" :fusion="fusion">
             <div>
-              <q-btn label="Select" @click="selectFusion(fusion)"/>
+              <q-btn label="Select" color="primary" @click="selectFusion(fusion)"/>
             </div>
           </FusionRow>
         </div>

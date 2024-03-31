@@ -5,7 +5,7 @@
         <form @submit.prevent="reset">
           <span class="text-h6">Filter</span>
 
-          <q-input v-model.number="filter.id" type="number" label="Search for ID"/>
+          <q-input v-model.number="filter.id" type="number" label="Search by ID"/>
 
           <div class="row q-gutter-x-md">
             <div class="col-grow">
