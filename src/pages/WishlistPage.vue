@@ -1,11 +1,16 @@
 <template>
   <q-page class="q-pa-lg">
-    <div class="text-h6">Cards on Wishlist: {{total}} ({{totalPrice}})</div>
+    <div class="text-h6 q-mb-md">Cards on Wishlist: {{total}} (Required Stars: {{totalPrice}})</div>
     <div class="flex">
       <PlayCard v-for="(count, id) in savegameStore.wishlist" :id="id">
-        {{count}}x<br>
-        {{ cardStore.cards[id].password }} = {{ cardStore.cards[id].cost }}<br>
-        <q-btn label="Remove" color="red" @click="savegameStore.removeFromWishlist(id)"/>
+        <template #action-buttons>
+          <q-btn icon="fas fa-times" color="negative" size="sm" dense @click="savegameStore.removeFromWishlist(id)">
+            <q-tooltip>Remove</q-tooltip>
+          </q-btn>
+        </template>
+        <template #before-name>
+          {{count}}x<br>
+        </template>
       </PlayCard>
     </div>
   </q-page>

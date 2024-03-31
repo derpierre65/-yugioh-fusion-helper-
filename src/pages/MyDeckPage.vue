@@ -25,7 +25,11 @@
           <span>Fusions: {{card.possibleFusions}}</span><br>
           <span>Fusions done: {{savegameStore.deckFusions[card.id] || 0}}</span><br>
         </template>
-        <q-btn label="Remove" color="red" @click="removeCard(card.id)"/>
+        <template #action-buttons>
+          <q-btn icon="fas fa-times" color="negative" size="sm" dense @click="removeCard(card.id)">
+            <q-tooltip>Remove</q-tooltip>
+          </q-btn>
+        </template>
       </PlayCard>
     </div>
   </q-page>

@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1 - 2024-04-01]
+### Added
+- More tooltips.
+- Move remove button to hover buttons in wishlist, my deck and passwords used.
+## Fixed
+- Remove duplicated password/cost in wishlist.
+
 ## [0.5.0 - 2024-04-01]
 ### Added
 - Fusions (to this card, with this card) are now collapsable.

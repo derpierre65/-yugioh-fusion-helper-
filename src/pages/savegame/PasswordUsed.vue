@@ -11,7 +11,11 @@
 
     <div v-if="savegameStore.passwordsUsed.length" class="text-h5 q-my-md">Your used passwords:</div>
     <PlayCard v-for="password in savegameStore.passwordsUsed" :id="cardsByPassword[password]">
-      <q-btn label="Remove" color="red" @click="remove(password)" />
+      <template #action-buttons>
+        <q-btn icon="fas fa-times" color="negative" size="sm" dense @click="remove(password)">
+          <q-tooltip>Remove</q-tooltip>
+        </q-btn>
+      </template>
     </PlayCard>
   </q-page>
 </template>

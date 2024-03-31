@@ -11,13 +11,14 @@
         <q-btn icon="fas fa-atom" color="primary" size="sm" dense @click="cardStore.showFusion(id)">
           <q-tooltip>Show Fusions</q-tooltip>
         </q-btn>
+        <slot name="action-buttons" />
       </div>
     </div>
     <div class="text-center" style="max-width:140px;">
-      {{id}}<br>
+      ID: {{id}}<br>
       <template v-if="$route.name !== 'play'">
         <template v-if="cardDetails.password && cardDetails.cost">
-          {{ cardDetails.password }} = {{ cardDetails.cost }}<br>
+          <span>{{ cardDetails.password }}<q-tooltip>Password</q-tooltip></span> = <span>{{ cardDetails.cost }}<q-tooltip>Required stars (cost)</q-tooltip></span><br>
         </template>
         <slot name="before-name" />
         <a :href="getLink(id)" target="_blank">{{ cardStore.cards[id].name }}</a><br>
