@@ -18,12 +18,12 @@
 
     <q-banner class="bg-yellow-9 q-my-md text-black">Fusions are overall fusions not only available fusions within your deck.</q-banner>
 
-    <div class="text-h6">Your deck {{ deckStore.cards.length }}/40:</div>
+    <div class="text-h6">Your deck {{ savegameStore.deckCards.length }}/40:</div>
     <div class="flex">
       <PlayCard v-for="card in cardList" :id="card.id">
         <template #before-name>
           <span>Fusions: {{card.possibleFusions}}</span><br>
-          <span>Fusions done: {{deckStore.fusions[card.id] || 0}}</span><br>
+          <span>Fusions done: {{savegameStore.deckFusions[card.id] || 0}}</span><br>
         </template>
         <q-btn label="Remove" color="red" @click="removeCard(card.id)"/>
       </PlayCard>
@@ -32,13 +32,13 @@
 </template>
 
 <script setup lang="ts">
-import useDeckStore from 'stores/deck';
 import {computed, ref} from 'vue';
-import {findFusions, fusionList, getIdsByString} from 'src/lib/fusions';
+import {fusionList, getIdsByString} from 'src/lib/fusions';
 import PlayCard from 'components/PlayCard.vue';
+import useSavegameStore from 'stores/savegame';
 
 //#region Composable & Prepare
-const deckStore = useDeckStore();
+const savegameStore = useSavegameStore();
 //#endregion
 
 //#region Data
@@ -54,13 +54,13 @@ const allFusions = computed(() => {
 
 const cardList = computed(() => {
   const cardFusions = Object.create(null);
-  for ( const id of deckStore.cards ) {
+  for ( const id of savegameStore.deckCards ) {
     if (!cardFusions[id] ) {
       cardFusions[id] = allFusions.value.filter((fusionId: string) => fusionId.startsWith(`${id}+`) || fusionId.endsWith(`+${id}`)).length;
     }
   }
 
-  return deckStore.cards.map((id) => ({
+  return savegameStore.deckCards.map((id) => ({
     id,
     possibleFusions: cardFusions[id] || 0,
   }));
@@ -75,24 +75,24 @@ const cardList = computed(() => {
 
 //#region Methods
 function addCards() {
-  if (deckStore.cards.length === 40) {
+  if (savegameStore.deckCards.length === 40) {
     return false;
   }
 
   const ids = getIdsByString(newCards.value);
-  if (deckStore.cards.length + ids.length > 40) {
+  if (savegameStore.deckCards.length + ids.length > 40) {
     return false;
   }
 
-  deckStore.cards.push(...ids);
-  deckStore.cards = deckStore.cards.sort((a, b) => {
+  savegameStore.deckCards.push(...ids);
+  savegameStore.deckCards = savegameStore.deckCards.sort((a, b) => {
     return parseInt(a) > parseInt(b) ? 1 : -1;
   });
   newCards.value = '';
 }
 
-function removeCard(id) {
-  deckStore.cards.splice(deckStore.cards.indexOf(id), 1);
+function removeCard(id: string) {
+  savegameStore.deckCards.splice(savegameStore.deckCards.indexOf(id), 1);
 }
 
 //#endregion

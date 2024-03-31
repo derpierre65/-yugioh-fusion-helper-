@@ -4,7 +4,7 @@
     <div class="text-center" style="max-width:140px;">
       {{id}}<br>
       <template v-if="$route.name !== 'play'">
-        <a href="#" @click.prevent="deckStore.addToWishlist(id)">Add to Wishlist</a><br>
+        <a href="#" @click.prevent="savegameStore.addToWishlist(id)">Add to Wishlist</a><br>
         <a href="#" @click.prevent="cardStore.showFusion(id)">Show Fusions</a><br>
         {{ cardStore.cards[id].password }} = {{ cardStore.cards[id].cost }}<br>
         <slot name="before-name" />
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import useCardStore from 'stores/card';
 import {computed} from 'vue';
-import useDeckStore from 'stores/deck';
+import useSavegameStore from 'stores/savegame';
 
 //#region Composable & Prepare
 const props = defineProps({
@@ -35,7 +35,7 @@ const props = defineProps({
 });
 
 const cardStore = useCardStore();
-const deckStore = useDeckStore();
+const savegameStore = useSavegameStore();
 //#endregion
 
 //#region Data

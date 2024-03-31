@@ -125,7 +125,7 @@ function reloadApplication() {
 
 //#region Created
 window.setInterval(() => {
-  if (globalStore.updateAvailable) {
+  if (globalStore.updateAvailable || import.meta.env.DEV) {
     return;
   }
 

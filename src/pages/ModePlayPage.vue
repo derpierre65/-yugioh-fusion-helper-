@@ -41,26 +41,26 @@
     <div class="flex q-col-gutter-sm">
       <div style="min-width:700px;">
         <div style="position: sticky; top: 100px;">
-          <template v-if="playStore.cards.length">
+          <template v-if="currentDuel.handCards.length">
             <div class="text-h6 q-py-sm">Your hand cards</div>
             <div class="row">
-              <PlayCard v-for="id in playStore.cards" :id="id">
+              <PlayCard v-for="id in currentDuel.handCards" :id="id">
                 <q-btn label="Play" color="positive" @click="playCard(id)"/>
                 <q-btn label="To deck" color="primary" @click="cardBackToDeck(id)"/>
               </PlayCard>
             </div>
           </template>
-          <template v-if="playStore.fieldCards.length">
+          <template v-if="currentDuel.fieldCards.length">
             <div class="text-h6 q-mt-md">Your field cards</div>
             <div class="row">
-              <PlayCard v-for="id in playStore.fieldCards" :id="id">
+              <PlayCard v-for="id in currentDuel.fieldCards" :id="id">
                 <q-btn label="Destroy" color="red" @click="destroyFieldCard(id)"/>
               </PlayCard>
             </div>
           </template>
         </div>
       </div>
-      <div v-if="playStore.cards.length" class="col-grow">
+      <div v-if="currentDuel.handCards.length" class="col-grow">
         <template v-if="fieldFusions">
           <div class="text-h6 q-py-sm">Possible fusions with your field and hand cards</div>
           <div>
@@ -91,19 +91,17 @@
 </template>
 
 <script setup lang="ts">
-import usePlayModeStore from 'stores/playMode';
-import {computed, inject, provide, ref} from 'vue';
+import {computed, inject, ref} from 'vue';
 import {findFusions, formatFusionList, getIdsByString} from 'src/lib/fusions';
 import PlayCard from 'components/PlayCard.vue';
 import FusionRow from 'components/FusionRow.vue';
-import useDeckStore from 'stores/deck';
 import {Portal} from 'portal-vue';
+import useSavegameStore from 'stores/savegame';
 
 //#region Composable & Prepare
 const {drawer, drawerWidth} = inject('drawer')!;
 
-const playStore = usePlayModeStore();
-const deckStore = useDeckStore();
+const savegameStore = useSavegameStore();
 //#endregion
 
 //region Data
@@ -111,11 +109,13 @@ const newCards = ref('');
 //endregion
 
 //#region Computed
+const currentDuel = computed(() => savegameStore.currentDuel);
+
 const fieldFusions = computed(() => {
   const possibleFusions = {};
   let fusionCount = 0;
-  for (const id of playStore.fieldCards) {
-    possibleFusions[id] = formatFusionList(findFusions(1, playStore.cards.concat(id), [], id));
+  for (const id of currentDuel.value.fieldCards) {
+    possibleFusions[id] = formatFusionList(findFusions(1, currentDuel.value.handCards.concat(id), [], id));
     fusionCount += possibleFusions[id].length;
   }
 
@@ -127,11 +127,11 @@ const fieldFusions = computed(() => {
 });
 
 const handFusions = computed(() => {
-  return formatFusionList(findFusions(1, playStore.cards, [], false));
+  return formatFusionList(findFusions(1, currentDuel.value.handCards, [], false));
 });
 
 const stackedDeckCards = computed(() => {
-  const deckCardIds = deckStore.cards;
+  const deckCardIds = savegameStore.deckCards;
   const stackedCards = Object.create(null);
   for (const id of deckCardIds) {
     if (!stackedCards[id]) {
@@ -144,7 +144,7 @@ const stackedDeckCards = computed(() => {
 });
 
 const availableDeckCards = computed(() => {
-  const drawn = playStore.drawn.concat();
+  const drawn = currentDuel.value.drawnCards.concat();
   const stackedCards = Object.assign({}, stackedDeckCards.value);
 
   return Object.keys(stackedCards).filter((id) => {
@@ -168,24 +168,25 @@ const availableDeckCards = computed(() => {
 
 //#region Methods
 function startNewGame() {
-  playStore.started = true;
-  playStore.drawn = [];
-  playStore.cards = [];
-  playStore.fieldCards = [];
+  savegameStore.currentDuel = {
+    drawnCards: [],
+    handCards: [],
+    fieldCards: [],
+  };
 }
 
 function addCards() {
-  if (playStore.cards.length === 5) {
+  if (currentDuel.value.handCards.length === 5) {
     return false;
   }
 
   const ids = getIdsByString(newCards.value);
-  if ((playStore.cards.length + ids.length) > 5) {
+  if ((currentDuel.value.handCards.length + ids.length) > 5) {
     return false;
   }
 
-  playStore.cards.push(...ids);
-  playStore.drawn.push(...ids);
+  currentDuel.value.handCards.push(...ids);
+  currentDuel.value.drawnCards.push(...ids);
 
   newCards.value = '';
 
@@ -200,31 +201,31 @@ function selectFusion(fusion, fieldCardId = null) {
   }
 
   for (const id of merge) {
-    const index = playStore.cards.indexOf(id);
-    playStore.cards.splice(index, 1);
-    deckStore.addFusion(id);
+    const index = currentDuel.value.handCards.indexOf(id);
+    currentDuel.value.handCards.splice(index, 1);
+    savegameStore.addFusion(id);
   }
 
-  playStore.fieldCards.push(fusion.final);
+  currentDuel.value.fieldCards.push(fusion.final);
 }
 
 function playCard(id: string) {
-  const index = playStore.cards.indexOf(id);
-  playStore.cards.splice(index, 1);
-  playStore.fieldCards.push(id);
+  const index = currentDuel.value.handCards.indexOf(id);
+  currentDuel.value.handCards.splice(index, 1);
+  currentDuel.value.fieldCards.push(id);
 }
 
 function cardBackToDeck(id: string) {
-  const index = playStore.cards.indexOf(id);
-  playStore.cards.splice(index, 1);
-  const drawnIndex = playStore.drawn.indexOf(id);
+  const index = currentDuel.value.handCards.indexOf(id);
+  currentDuel.value.handCards.splice(index, 1);
+  const drawnIndex = currentDuel.value.drawnCards.indexOf(id);
   if ( drawnIndex >= 0 ) {
-    playStore.drawn.splice(drawnIndex, 1);
+    currentDuel.value.drawnCards.splice(drawnIndex, 1);
   }
 }
 
 function destroyFieldCard(id: string) {
-  playStore.fieldCards.splice(playStore.fieldCards.indexOf(id), 1);
+  currentDuel.value.fieldCards.splice(currentDuel.value.fieldCards.indexOf(id), 1);
 }
 
 function addToHand(id: string) {
@@ -232,7 +233,7 @@ function addToHand(id: string) {
   newCards.value = id;
   addCards();
   newCards.value = beforeValue;
-  if (playStore.cards.length >= 5) {
+  if (currentDuel.value.handCards.length >= 5) {
     drawer.value = false;
   }
 }
