@@ -1,17 +1,20 @@
 <template>
   <q-page class="q-pa-lg">
     <div class="row q-col-gutter-md no-wrap">
-      <div style="min-width:200px;">
-        <q-list bordered separator style="position:sticky; top:100px;">
-          <q-item
-              v-for="(person, index) of persons"
-              :active="selectedPerson === index"
-              clickable
-              @click="selectedPerson = index"
-          >
-            <q-item-section>{{ person.name }}</q-item-section>
-          </q-item>
-        </q-list>
+      <div style="min-width:200px">
+        <q-select
+            v-model="selectedPerson"
+            :options="personOptions"
+            :input-debounce="0"
+            label="Opponent"
+            style="position: sticky; top: 123px;"
+            use-input
+            map-options
+            emit-value
+            outlined
+            dense
+            @filter="filterFn"
+        />
       </div>
       <div class="col-grow col-shrink full-width q-gutter-y-md">
         <div class="text-h5">{{persons[selectedPerson].name}}</div>
@@ -55,13 +58,14 @@ import persons from 'src/assets/persons.json';
 import {computed, ref} from 'vue';
 import PlayCard from 'components/PlayCard.vue';
 import AppCard from 'components/AppCard.vue';
+import {SelectableOption} from 'src/types/global';
 
 //#region Composable & Prepare
 //#endregion
 
 //#region Data
 const selectedPerson = ref(0);
-const showDeck = ref(false);
+const personOptions = ref([] as SelectableOption[]);
 //#endregion
 
 //#region Computed
@@ -70,6 +74,13 @@ const tecSADrops = computed(getDrops('TEC: S/A'));
 const powSADrops = computed(getDrops('POW: S/A'));
 
 const bcdDrops = computed(getDrops('POW/TEC: B/C/D'));
+
+const selectablePersons = computed(() => {
+  return persons.map((person, index) => ({
+    value: index,
+    label: person.name,
+  }));
+});
 //#endregion
 
 //#region Watch
@@ -93,8 +104,25 @@ function getDrops(type) {
   };
 }
 
+function filterFn(val: string, update) {
+  val = val.trim();
+  if (!val.length) {
+    update(() => {
+      personOptions.value = selectablePersons.value
+    });
+
+    return
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    personOptions.value = selectablePersons.value.filter((option) => option.label.toLowerCase().includes(needle))
+  })
+}
+
 //#endregion
 
 //#region Created
+personOptions.value = selectablePersons.value;
 //#endregion
 </script>
