@@ -4,7 +4,7 @@
       <q-toolbar-title class="text-h5">
         <slot name="title">{{ title }}</slot>
       </q-toolbar-title>
-      <q-icon v-if="expandable" :name="visible ? 'expand_less' : 'expand_more'" size="md"></q-icon>
+      <q-icon v-if="expandable" :name="visible ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></q-icon>
     </q-toolbar>
 
     <q-slide-transition>
