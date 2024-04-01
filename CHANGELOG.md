@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0 - 2024-04-01]
+### Added
+- List of possible drops in wishlist.
+- Select all unlocked opponents to see drops in wishlist.
+### Changed
+- Replace opponent select field with opponent images in opponents database.
+
 ## [0.5.2 - 2024-04-01]
 ## Fixed
 - Password and Cost for cards 357 and 362.
