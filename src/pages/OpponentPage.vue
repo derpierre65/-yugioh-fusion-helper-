@@ -1,20 +1,11 @@
 <template>
   <q-page class="q-pa-lg">
     <div class="row q-col-gutter-md no-wrap">
-      <div style="min-width:200px">
-        <q-select
-            v-model="selectedPerson"
-            :options="personOptions"
-            :input-debounce="0"
-            label="Opponent"
-            style="position: sticky; top: 123px;"
-            use-input
-            map-options
-            emit-value
-            outlined
-            dense
-            @filter="filterFn"
-        />
+      <div style="max-width:256px">
+        <div class="flex tw-sticky tw-top-[123px]">
+          <div class="tw-h-12 tw-w-12" />
+          <opponent-box v-for="id in 39" :id="id" class="cursor-pointer" @click="selectPerson(id)" />
+        </div>
       </div>
       <div class="col-grow col-shrink full-width q-gutter-y-md">
         <div class="text-h5">
@@ -70,14 +61,13 @@ import persons from 'src/assets/persons.json';
 import {computed, ref} from 'vue';
 import PlayCard from 'components/PlayCard.vue';
 import AppCard from 'components/AppCard.vue';
-import {SelectableOption} from 'src/types/global';
+import OpponentBox from 'components/OpponentBox.vue';
 
 //#region Composable & Prepare
 //#endregion
 
 //#region Data
 const selectedPerson = ref(0);
-const personOptions = ref([] as SelectableOption[]);
 //#endregion
 
 //#region Computed
@@ -102,6 +92,10 @@ const selectablePersons = computed(() => {
 //#endregion
 
 //#region Methods
+function selectPerson(id: number) {
+  selectedPerson.value = persons.findIndex((person) => person.order === id-1);
+}
+
 function getDrops(type: string) {
   return () => {
     const drops = persons[selectedPerson.value].drops;
@@ -115,26 +109,8 @@ function getDrops(type: string) {
     }));
   };
 }
-
-function filterFn(val: string, update) {
-  val = val.trim();
-  if (!val.length) {
-    update(() => {
-      personOptions.value = selectablePersons.value
-    });
-
-    return
-  }
-
-  update(() => {
-    const needle = val.toLowerCase();
-    personOptions.value = selectablePersons.value.filter((option) => option.label.toLowerCase().includes(needle))
-  })
-}
-
 //#endregion
 
 //#region Created
-personOptions.value = selectablePersons.value;
 //#endregion
 </script>
