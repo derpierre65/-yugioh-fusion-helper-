@@ -15,6 +15,8 @@
         <q-route-tab :to="{name: 'my-deck'}" label="My Deck" no-caps />
         <q-route-tab :to="{name: 'password-used'}" label="Passwords used" no-caps />
         <q-route-tab :to="{name: 'wishlist'}" label="Wishlist" no-caps />
+        <q-route-tab :to="{name: 'unlocked-opponents'}" label="Unlocked Opponents" no-caps />
+
         <q-route-tab :to="{name: 'database-cards'}" label="Card Database" class="q-ml-lg" no-caps />
         <q-route-tab :to="{name: 'database-opponents'}" label="Opponents Database" no-caps />
       </q-tabs>

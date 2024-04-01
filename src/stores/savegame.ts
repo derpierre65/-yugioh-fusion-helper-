@@ -8,6 +8,7 @@ const useSavegameStore = defineStore('savegame', {
         return {
             stars: 0,
             passwordsUsed: [] as string[],
+            unlockedOpponents: [38] as number[],
             // wishlist
             wishlist: {} as Record<string, number>,
             // fusion done with the own deck
