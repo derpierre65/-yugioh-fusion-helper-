@@ -11,6 +11,7 @@
 
       <q-tabs align="left">
         <q-route-tab to="/" label="Normal Mode" no-caps />
+        <q-route-tab :to="{name: 'duel-rank-calculator'}" label="Duel Rank Calculator" no-caps />
         <q-route-tab :to="{name: 'play'}" label="Play Mode" no-caps />
         <q-route-tab :to="{name: 'my-deck'}" label="My Deck" no-caps />
         <q-route-tab :to="{name: 'password-used'}" label="Passwords used" no-caps />
